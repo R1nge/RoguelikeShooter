@@ -117,7 +117,8 @@ namespace Player
                 _currentWeapon.gameObject.SetActive(false);
                 _currentWeapon.OnWeaponDropped -= DropWeapon;
             }
-
+            
+            //TODO: fix weapon not switching when one weapon remained
             _currentWeapon = _weapons[index % _weapons.Count];
             _currentWeapon.gameObject.SetActive(true);
             _currentWeapon.OnWeaponDropped += DropWeapon;

@@ -15,6 +15,7 @@ namespace Weapons.ShootingWeapons
 
         [SerializeField] protected float reloadTime;
         [SerializeField] protected Transform shootPoint;
+        [SerializeField] protected LayerMask hitLayer;
         protected bool CanShoot = true;
         protected int CurrentAmmoAmount;
         private Coroutine _reloadCoroutine;
@@ -59,7 +60,7 @@ namespace Weapons.ShootingWeapons
         private void Raycast()
         {
             Ray ray = new Ray(shootPoint.position, shootPoint.forward);
-            if (Physics.Raycast(ray, out var hit, shootDistance))
+            if (Physics.Raycast(ray, out var hit, shootDistance, hitLayer))
             {
                 if (hit.transform.TryGetComponent(out IDamageable damageable))
                 {
