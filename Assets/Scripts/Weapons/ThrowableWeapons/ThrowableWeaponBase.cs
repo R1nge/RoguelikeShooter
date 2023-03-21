@@ -15,7 +15,7 @@ namespace Weapons.ThrowableWeapons
             Rigidbody.AddForce(-transform.forward * force, ForceMode.Impulse);
         }
 
-        private void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out IDamageable damageable))
             {
@@ -23,7 +23,7 @@ namespace Weapons.ThrowableWeapons
             }
         }
 
-        private void OnCollisionEnter(Collision other)
+        protected virtual void OnCollisionEnter(Collision other)
         {
             if (other.transform.TryGetComponent(out IDamageable damageable))
             {
