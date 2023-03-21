@@ -8,13 +8,17 @@ namespace Weapons.ShootingWeapons
     public abstract class ShootingWeaponBase : WeaponBase
     {
         [SerializeField] private float shootDistance;
-        [SerializeField] protected int  maxAmmoAmount, clipSize;
-        [SerializeField] protected float fireRate;
+        [SerializeField] protected int maxAmmoAmount, clipSize;
+
+        [Tooltip("Fire rate per minute")] [SerializeField]
+        protected float fireRate;
+
         [SerializeField] protected float reloadTime;
         [SerializeField] protected Transform shootPoint;
         protected bool CanShoot = true;
         protected int CurrentAmmoAmount;
         private Coroutine _reloadCoroutine;
+        private float _nextFire;
 
         protected override void Awake()
         {
@@ -30,7 +34,10 @@ namespace Weapons.ShootingWeapons
             }
             else
             {
-                Shoot();
+                if (CanShoot)
+                {
+                    Shoot();
+                }
             }
         }
 
@@ -63,21 +70,30 @@ namespace Weapons.ShootingWeapons
 
         private void Shoot()
         {
-            Raycast();
-            CurrentAmmoAmount--;
+            if (Time.time > _nextFire)
+            {
+                _nextFire = Time.time + 1 / (fireRate / 60);
+                Raycast();
+                CurrentAmmoAmount--;
+            }
         }
 
         private void OnEnable()
         {
-            if (!CanShoot)
+            if (CurrentAmmoAmount <= 0)
             {
                 _reloadCoroutine = StartCoroutine(Reload_c());
+            }
+            else
+            {
+                CanShoot = true;
             }
         }
 
         private void OnDisable()
         {
             StopAllCoroutines();
+            _reloadCoroutine = null;
         }
     }
 }
