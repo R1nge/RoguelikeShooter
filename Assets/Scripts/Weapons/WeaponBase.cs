@@ -10,11 +10,16 @@ namespace Weapons
     {
         [SerializeField] protected int damage;
         protected Rigidbody Rigidbody;
+        private Collider _collider;
 
         //TODO: redo
         public event Action<WeaponBase> OnWeaponDropped;
 
-        protected virtual void Awake() => Rigidbody = GetComponent<Rigidbody>();
+        protected virtual void Awake()
+        {
+            Rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
+        }
 
         public abstract void Attack();
 
@@ -22,7 +27,7 @@ namespace Weapons
         {
             Rigidbody.isKinematic = true;
             transform.parent = parent;
-            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            _collider.isTrigger = true;
         }
 
         public virtual void Drop()
@@ -30,6 +35,7 @@ namespace Weapons
             transform.parent = null;
             Rigidbody.isKinematic = false;
             OnWeaponDropped?.Invoke(this);
+            _collider.isTrigger = false;
         }
 
         public void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)
