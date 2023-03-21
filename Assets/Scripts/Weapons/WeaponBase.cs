@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Weapons
 {
@@ -22,6 +24,17 @@ namespace Weapons
         {
             transform.parent = null;
             Rigidbody.isKinematic = false;
+        }
+
+        public void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)
+        {
+            current = null;
+            inventory.Remove(this);
+        }
+
+        public virtual void AddToInventory(List<WeaponBase> inventory)
+        {
+            inventory.Add(this);
         }
     }
 }

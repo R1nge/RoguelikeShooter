@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Weapons;
 using Weapons.ShootingWeapons;
 
@@ -48,27 +50,9 @@ namespace Player
             {
                 if (hit.transform.TryGetComponent(out WeaponBase weapon))
                 {
-                    AddWeapon(weapon);
                     PickupWeapon(weapon);
                 }
             }
-        }
-
-        private void AddWeapon(WeaponBase weapon)
-        {
-            if (_currentWeapon == weapon)
-            {
-                Debug.LogError("Pickuped the same weapon");
-                return;
-            }
-
-            _currentWeapon = weapon;
-            _weapons.Add(weapon);
-        }
-
-        private void RemoveWeapon(WeaponBase weapon)
-        {
-            _weapons.Remove(weapon);
         }
 
         private void Attack()
@@ -89,14 +73,21 @@ namespace Player
 
         private void PickupWeapon(WeaponBase weapon)
         {
+            if (_currentWeapon == null)
+            {
+                _currentWeapon = weapon;
+            }
+
             weapon.Pickup(weaponHolder);
+            weapon.AddToInventory(_weapons);
         }
 
         private void DropWeapon(WeaponBase weapon)
         {
-            RemoveWeapon(weapon);
-            _currentWeapon = null;
             weapon.Drop();
+            //weapon.RemoveFromInventory(_weapons, ref _currentWeapon);
         }
+
+        //TODO: add weapon scroll
     }
 }

@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using Damageable;
 using UnityEngine;
 
 namespace Weapons.ThrowableWeapons
 {
-    public class Kunai : WeaponBase
+    public class Kunai : ThrowableWeaponBase
     {
         [SerializeField] private float force;
 
         public override void Attack()
         {
-            transform.parent = null;
-            Rigidbody.isKinematic = false;
+            Drop();
+            //RemoveFromInventory(this);
             Rigidbody.AddForce(-transform.forward * force, ForceMode.Impulse);
         }
 
