@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Weapons
 {
+    [RequireComponent(typeof(Rigidbody))]
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] protected int damage;
         protected Rigidbody Rigidbody;
+
+        //TODO: redo
+        public event Action<WeaponBase> OnWeaponDropped;
 
         protected virtual void Awake() => Rigidbody = GetComponent<Rigidbody>();
 
@@ -24,6 +29,7 @@ namespace Weapons
         {
             transform.parent = null;
             Rigidbody.isKinematic = false;
+            OnWeaponDropped?.Invoke(this);
         }
 
         public void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)

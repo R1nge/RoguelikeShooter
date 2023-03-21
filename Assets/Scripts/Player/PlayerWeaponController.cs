@@ -14,6 +14,7 @@ namespace Player
         [SerializeField] private Camera playerCamera;
         private WeaponBase _currentWeapon;
         private List<WeaponBase> _weapons = new();
+        private int _lastWeaponIndex;
 
         private void Update()
         {
@@ -22,7 +23,7 @@ namespace Player
 
         private void GetInput()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
                 Attack();
             }
@@ -40,6 +41,30 @@ namespace Player
             if (Input.GetKeyDown(KeyCode.G))
             {
                 DropWeapon(_currentWeapon);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SelectWeapon(0);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SelectWeapon(1);
+            }
+
+            if (_weapons.Count > 1)
+            {
+                if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                {
+                    _lastWeaponIndex = (_lastWeaponIndex + 1) % _weapons.Count;
+                    SelectWeapon(_lastWeaponIndex);
+                }
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                {
+                    _lastWeaponIndex = Mathf.Abs(_lastWeaponIndex - 1) % _weapons.Count;
+                    SelectWeapon(_lastWeaponIndex);
+                }
             }
         }
 
@@ -73,21 +98,29 @@ namespace Player
 
         private void PickupWeapon(WeaponBase weapon)
         {
-            if (_currentWeapon == null)
-            {
-                _currentWeapon = weapon;
-            }
-
             weapon.Pickup(weaponHolder);
             weapon.AddToInventory(_weapons);
+            SelectWeapon(_weapons.Count - 1);
         }
 
         private void DropWeapon(WeaponBase weapon)
         {
+            _currentWeapon.OnWeaponDropped -= DropWeapon;
             weapon.Drop();
-            //weapon.RemoveFromInventory(_weapons, ref _currentWeapon);
+            weapon.RemoveFromInventory(_weapons, ref _currentWeapon);
         }
 
-        //TODO: add weapon scroll
+        private void SelectWeapon(int index)
+        {
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.gameObject.SetActive(false);
+                _currentWeapon.OnWeaponDropped -= DropWeapon;
+            }
+
+            _currentWeapon = _weapons[index % _weapons.Count];
+            _currentWeapon.gameObject.SetActive(true);
+            _currentWeapon.OnWeaponDropped += DropWeapon;
+        }
     }
 }

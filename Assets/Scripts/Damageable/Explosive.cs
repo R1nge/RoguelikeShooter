@@ -14,7 +14,7 @@ namespace Damageable
 
         private void Explode()
         {
-            print("Explosive");
+            Destroy(gameObject);
         }
     }
 }
