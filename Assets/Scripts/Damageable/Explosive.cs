@@ -9,7 +9,7 @@ namespace Damageable
         [SerializeField] private float damageRadius;
         [SerializeField] private CinemachineImpulseSource impulse;
         [SerializeField] private AudioSource explosionSound;
-        private readonly RaycastHit[] _hits = new RaycastHit[30];
+        private readonly Collider[] _hits = new Collider[30];
 
         public void TakeDamage(int amount)
         {
@@ -26,7 +26,7 @@ namespace Damageable
 
         private void Damage()
         {
-            var hits = Physics.SphereCastNonAlloc(transform.position, damageRadius, transform.forward, _hits);
+            var hits = Physics.OverlapSphereNonAlloc(transform.position, damageRadius, _hits);
             if (hits == 0) return;
             for (int i = 1; i < hits; i++)
             {

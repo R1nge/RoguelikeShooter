@@ -10,7 +10,7 @@ namespace Weapons.ThrowableWeapons
         [SerializeField] protected float timeBeforeExplosion;
         [SerializeField] protected CinemachineImpulseSource impulse;
         [SerializeField] protected AudioSource explosionSound;
-        private readonly RaycastHit[] _hits = new RaycastHit[30];
+        private readonly Collider[] _hits = new Collider[30];
         private bool _canPickup = true;
 
         public override void Attack()
@@ -35,7 +35,7 @@ namespace Weapons.ThrowableWeapons
 
         private void Damage()
         {
-            var hits = Physics.SphereCastNonAlloc(transform.position, damageRadius, transform.forward, _hits);
+            var hits = Physics.OverlapSphereNonAlloc(transform.position, damageRadius, _hits);
             if (hits == 0) return;
             for (int i = 0; i < hits; i++)
             {
