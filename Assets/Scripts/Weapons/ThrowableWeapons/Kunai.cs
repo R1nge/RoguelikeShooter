@@ -8,7 +8,8 @@ namespace Weapons.ThrowableWeapons
 
         public override void Attack()
         {
-            base.Attack();
+            Drop();
+            Rigidbody.AddForce(-transform.forward * force, ForceMode.Impulse);
             _canBounce = true;
         }
 

@@ -12,7 +12,7 @@ namespace Weapons.ThrowableWeapons
         public override void Attack()
         {
             Drop();
-            Rigidbody.AddForce(-transform.forward * force, ForceMode.Impulse);
+            Rigidbody.AddForce(transform.forward * force, ForceMode.Impulse);
         }
 
         protected virtual void OnTriggerEnter(Collider other)
