@@ -54,7 +54,7 @@ namespace Player
                 {
                     SelectWeapon(1);
                 }
-                
+
                 if (Input.GetAxis("Mouse ScrollWheel") > 0)
                 {
                     _lastWeaponIndex = (_lastWeaponIndex + 1) % _weapons.Count;
@@ -71,7 +71,7 @@ namespace Player
         private void PickupWeapon()
         {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-            if (Physics.Raycast(ray, out var hit, rayDistance))
+            if (Physics.SphereCast(ray, 1f, out var hit, rayDistance))
             {
                 if (hit.transform.TryGetComponent(out WeaponBase weapon))
                 {
@@ -117,7 +117,7 @@ namespace Player
                 _currentWeapon.gameObject.SetActive(false);
                 _currentWeapon.OnWeaponDropped -= DropWeapon;
             }
-            
+
             _currentWeapon = _weapons[index % _weapons.Count];
             _currentWeapon.gameObject.SetActive(true);
             _currentWeapon.OnWeaponDropped += DropWeapon;
