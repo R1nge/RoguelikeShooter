@@ -62,9 +62,5 @@ namespace Weapons.ThrowableWeapons
         protected override void OnCollisionEnter(Collision other)
         {
         }
-
-        protected override void OnTriggerEnter(Collider other)
-        {
-        }
     }
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3236850290993764524}
   - component: {fileID: 3236850290993764514}
   - component: {fileID: 3236850290993764515}
+  - component: {fileID: 982694554829205242}
   m_Layer: 0
   m_Name: MeleeEnemy
   m_TagString: Untagged
@@ -98,9 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e71cc73357e52b4c81b41719f3304e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  states:
-  - {fileID: 3236850290993764514}
-  - {fileID: 3236850290993764515}
 --- !u!114 &3236850290993764514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981667b802574c95b4c6ab0c5d39aec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waypoints: []
 --- !u!114 &3236850290993764515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +124,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496e3acac50647418b6cbc879cf128cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &982694554829205242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3236850290993764521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5b721945376471686cbfdfb7e614381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
 --- !u!1 &3236850291584341804
 GameObject:
   m_ObjectHideFlags: 0
