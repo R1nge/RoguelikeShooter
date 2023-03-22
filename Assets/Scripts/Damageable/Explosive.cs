@@ -10,14 +10,17 @@ namespace Damageable
         [SerializeField] private CinemachineImpulseSource impulse;
         [SerializeField] private AudioSource explosionSound;
         private readonly Collider[] _hits = new Collider[30];
+        private bool _exploded;
 
         public void TakeDamage(int amount)
         {
+            if(_exploded) return;
             Explode();
         }
 
         private void Explode()
         {
+            _exploded = true;
             impulse.GenerateImpulse();
             Instantiate(explosionSound);
             Damage();
