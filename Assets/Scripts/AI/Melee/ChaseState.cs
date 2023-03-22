@@ -6,14 +6,14 @@ namespace AI
 {
     public class ChaseState : State
     {
-        private MeleeAI _meleeAI;
+        private EnemyAI _enemyAI;
         private NavMeshAgent _navMeshAgent;
         private Transform _target;
         private RoamingState _roamingState;
 
         private void Awake()
         {
-            _meleeAI = GetComponent<MeleeAI>();
+            _enemyAI = GetComponent<EnemyAI>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _roamingState = GetComponent<RoamingState>();
         }
@@ -42,7 +42,7 @@ namespace AI
             {
                 if (_target == player.transform)
                 {
-                    _meleeAI.SetState(_roamingState);
+                    _enemyAI.SetState(_roamingState);
                 }
             }
         }

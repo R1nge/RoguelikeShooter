@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace AI
 {
-    public class MeleeAI : MonoBehaviour
+    public class EnemyAI : MonoBehaviour
     {
         private State[] _states;
         private State _currentState;
