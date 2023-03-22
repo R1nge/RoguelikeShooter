@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using Weapons;
 using Weapons.ShootingWeapons;
 
@@ -10,10 +8,11 @@ namespace Player
     public class PlayerWeaponController : MonoBehaviour
     {
         [SerializeField] private float rayDistance;
+        [SerializeField] private LayerMask layerMask;
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private Camera playerCamera;
         private WeaponBase _currentWeapon;
-        private List<WeaponBase> _weapons = new();
+        private readonly List<WeaponBase> _weapons = new();
         private int _lastWeaponIndex;
 
         private void Update()
@@ -71,7 +70,7 @@ namespace Player
         private void PickupWeapon()
         {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-            if (Physics.SphereCast(ray, 1f, out var hit, rayDistance))
+            if (Physics.Raycast(ray, out var hit, rayDistance, layerMask))
             {
                 if (hit.transform.TryGetComponent(out WeaponBase weapon))
                 {

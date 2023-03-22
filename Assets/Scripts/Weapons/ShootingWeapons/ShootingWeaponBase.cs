@@ -7,7 +7,7 @@ namespace Weapons.ShootingWeapons
 {
     public abstract class ShootingWeaponBase : WeaponBase
     {
-        [SerializeField] private float shootDistance;
+        [SerializeField] protected float shootDistance;
         [SerializeField] protected int maxAmmoAmount, clipSize;
 
         [Tooltip("Fire rate per minute")] [SerializeField]
@@ -57,7 +57,17 @@ namespace Weapons.ShootingWeapons
             _reloadCoroutine = null;
         }
 
-        private void Raycast()
+        protected virtual void Shoot()
+        {
+            if (Time.time > _nextFire)
+            {
+                _nextFire = Time.time + 1 / (fireRate / 60);
+                Raycast();
+                CurrentAmmoAmount--;
+            }
+        }
+
+        protected virtual void Raycast()
         {
             Ray ray = new Ray(shootPoint.position, shootPoint.forward);
             if (Physics.Raycast(ray, out var hit, shootDistance, hitLayer))
@@ -66,16 +76,6 @@ namespace Weapons.ShootingWeapons
                 {
                     damageable.TakeDamage(damage);
                 }
-            }
-        }
-
-        private void Shoot()
-        {
-            if (Time.time > _nextFire)
-            {
-                _nextFire = Time.time + 1 / (fireRate / 60);
-                Raycast();
-                CurrentAmmoAmount--;
             }
         }
 

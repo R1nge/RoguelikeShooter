@@ -444,8 +444,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c2ece668d72450084627fcf2e7b031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponInfo: {fileID: 11400000, guid: de9ed99539d70014d92b3cd01d8abfcb, type: 2}
   damage: 10
-  isStackable: 1
   maxAmount: 2
   force: 50
 --- !u!1 &8290338939768179094

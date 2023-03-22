@@ -11,13 +11,13 @@ namespace Weapons.ThrowableWeapons
         [SerializeField] protected CinemachineImpulseSource impulse;
         [SerializeField] protected AudioSource explosionSound;
         private readonly Collider[] _hits = new Collider[30];
-        private bool _canPickup = true;
+        
 
         public override void Attack()
         {
             Drop();
             Throw();
-            _canPickup = false;
+            CanPickup = false;
             Invoke(nameof(Explode), timeBeforeExplosion);
         }
 
@@ -54,7 +54,7 @@ namespace Weapons.ThrowableWeapons
 
         public override void Pickup(Transform parent)
         {
-            if (!_canPickup) return;
+            if (!CanPickup) return;
             base.Pickup(parent);
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
