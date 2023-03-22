@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Cinemachine;
 using Damageable;
 using UnityEngine;
 
@@ -8,18 +8,28 @@ namespace Weapons.ThrowableWeapons
     {
         [SerializeField] protected float damageRadius;
         [SerializeField] protected float timeBeforeExplosion;
-        private RaycastHit[] _hits = new RaycastHit[30];
+        [SerializeField] protected CinemachineImpulseSource impulse;
+        [SerializeField] protected AudioSource explosionSound;
+        private readonly RaycastHit[] _hits = new RaycastHit[30];
         private bool _canPickup = true;
 
         public override void Attack()
         {
-            base.Attack();
+            Drop();
+            Throw();
             _canPickup = false;
             Invoke(nameof(Explode), timeBeforeExplosion);
         }
 
+        protected virtual void Throw()
+        {
+            //TODO: use projectile motion
+        }
+
         protected virtual void Explode()
         {
+            impulse.GenerateImpulse();
+            Instantiate(explosionSound);
             Damage();
         }
 
