@@ -10,7 +10,7 @@ namespace Damageable
         [SerializeField] private CinemachineImpulseSource impulse;
         [SerializeField] private AudioSource explosionSound;
         private readonly RaycastHit[] _hits = new RaycastHit[30];
-        
+
         public void TakeDamage(int amount)
         {
             Explode();
@@ -28,7 +28,7 @@ namespace Damageable
         {
             var hits = Physics.SphereCastNonAlloc(transform.position, damageRadius, transform.forward, _hits);
             if (hits == 0) return;
-            for (int i = 0; i < hits; i++)
+            for (int i = 1; i < hits; i++)
             {
                 var hitTransform = _hits[i].transform;
                 if (Physics.Raycast(transform.position, hitTransform.position, out var hit, damageRadius))
