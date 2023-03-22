@@ -43,18 +43,18 @@ namespace Player
                 DropWeapon(_currentWeapon);
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (_weapons.Count >= 1)
             {
-                SelectWeapon(0);
-            }
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    SelectWeapon(0);
+                }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                SelectWeapon(1);
-            }
-
-            if (_weapons.Count > 1)
-            {
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SelectWeapon(1);
+                }
+                
                 if (Input.GetAxis("Mouse ScrollWheel") > 0)
                 {
                     _lastWeaponIndex = (_lastWeaponIndex + 1) % _weapons.Count;
@@ -118,7 +118,6 @@ namespace Player
                 _currentWeapon.OnWeaponDropped -= DropWeapon;
             }
             
-            //TODO: fix weapon not switching when one weapon remained
             _currentWeapon = _weapons[index % _weapons.Count];
             _currentWeapon.gameObject.SetActive(true);
             _currentWeapon.OnWeaponDropped += DropWeapon;
