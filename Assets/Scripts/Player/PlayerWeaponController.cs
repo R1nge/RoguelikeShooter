@@ -101,6 +101,7 @@ namespace Player
 
         private void AttackHold()
         {
+            //TODO: fix
             _weapons[_currentWeaponIndex]?.AttackHold();
         }
 

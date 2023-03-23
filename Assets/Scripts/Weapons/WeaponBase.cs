@@ -49,7 +49,7 @@ namespace Weapons
             RemoveFromInventory();
         }
 
-        public void RemoveFromInventory()
+        protected void RemoveFromInventory()
         {
             //TODO: redo
             Owner.GetWeapons().Remove(this);

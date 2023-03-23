@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Weapons.ShootingWeapons.AutoWeapons
 {
-    public class AutoWeaponBase : ShootingWeaponBase
+    public class Rifle1 : ShootingWeaponBase
     {
         public override void Pickup(Transform parent, PlayerWeaponController owner)
         {
