@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe61377277b6424ebac24530dc16ede1, type: 3}
-  m_Name: Kunai
+  m_Script: {fileID: 11500000, guid: e14b43276f37440aa7df0b26e1e5859c, type: 3}
+  m_Name: ChestDrop
   m_EditorClassIdentifier: 
-  weaponName: Kunai
-  rareness: 4
-  rarenessColors: {fileID: 11400000, guid: 7ef9de246be72ad4f8728805907908e6, type: 2}
+  drops:
+  - {fileID: 4201803859147020425, guid: c6d1663788a277a429dd6a3ede741d15, type: 3}
+  - {fileID: 7756471023934707916, guid: 34d34cab6f00e1d45925528c41048aa5, type: 3}

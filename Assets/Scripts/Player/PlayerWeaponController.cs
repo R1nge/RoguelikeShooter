@@ -34,7 +34,7 @@ namespace Player
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                PickupWeapon();
+                Raycast();
             }
 
             if (Input.GetKeyDown(KeyCode.G))
@@ -67,7 +67,7 @@ namespace Player
             }
         }
 
-        private void PickupWeapon()
+        private void Raycast()
         {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             if (Physics.Raycast(ray, out var hit, rayDistance, layerMask))
@@ -97,9 +97,12 @@ namespace Player
 
         private void PickupWeapon(WeaponBase weapon)
         {
-            weapon.Pickup(weaponHolder);
-            weapon.AddToInventory(_weapons);
-            SelectWeapon(_weapons.Count - 1);
+            if (weapon.TryAddToInventory(_weapons))
+            {
+                weapon.Pickup(weaponHolder);
+                SelectWeapon(_weapons.Count - 1);
+            }
+            
         }
 
         private void DropWeapon(WeaponBase weapon)

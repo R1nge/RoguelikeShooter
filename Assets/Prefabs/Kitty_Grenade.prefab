@@ -80,10 +80,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponInfo: {fileID: 11400000, guid: 041b54ec6e9bfc548899e245710e18b7, type: 2}
   damage: 10
+  CurrentAmount: 0
   maxAmount: 0
   force: 1
   damageRadius: 30
   timeBeforeExplosion: 5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 129
   impulse: {fileID: 7711373077514242363}
   explosionSound: {fileID: 6945249451151398799, guid: f9355b2dae005a84ebbd5dad05994d6a, type: 3}
 --- !u!114 &7711373077514242363

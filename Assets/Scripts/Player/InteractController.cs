@@ -1,27 +1,30 @@
 ﻿using Interactable;
-using TMPro;
 using UnityEngine;
 
-namespace UI
+namespace Player
 {
-    public class InteractUI : MonoBehaviour
+    public class InteractController : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI interactText;
         [SerializeField] private float rayDistance;
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private Camera playerCamera;
 
-        private void Update() => Raycast();
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Raycast();
+            }
+        }
 
         private void Raycast()
         {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             if (Physics.Raycast(ray, out var hit, rayDistance, layerMask))
             {
-                if (hit.transform.TryGetComponent(out IInteractable _))
+                if (hit.transform.TryGetComponent(out IInteractable interactable))
                 {
-                    interactText.text = "Interact";
-                    interactText.color = Color.white;
+                    interactable.Interact();
                 }
             }
         }
