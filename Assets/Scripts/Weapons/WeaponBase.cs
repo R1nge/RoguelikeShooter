@@ -7,6 +7,7 @@ namespace Weapons
 {
     public abstract class WeaponBase : MonoBehaviour
     {
+        [SerializeField] private Vector3 positionOffset, rotationOffset;
         [SerializeField] protected WeaponInfo weaponInfo;
         protected bool CanPickup = true;
         protected Rigidbody Rigidbody;
@@ -38,6 +39,7 @@ namespace Weapons
             Rigidbody.isKinematic = true;
             Collider.isTrigger = true;
             Owner = owner;
+            transform.SetLocalPositionAndRotation(positionOffset, Quaternion.Euler(rotationOffset));
         }
 
         public virtual void Drop()

@@ -21,13 +21,6 @@ namespace Weapons.ThrowableWeapons
             CanPickup = true;
         }
 
-        public override void Pickup(Transform parent, PlayerWeaponController owner)
-        {
-            if (!CanPickup) return;
-            base.Pickup(parent, owner);
-            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.Euler(0, 180, 0));
-        }
-
         private void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.TryGetComponent(out IDamageable damageable))
