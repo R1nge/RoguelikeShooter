@@ -13,7 +13,7 @@ namespace Weapons.ThrowableWeapons
         [SerializeField] protected AudioSource explosionSound;
         private readonly Collider[] _hits = new Collider[30];
 
-        public override void Attack()
+        public override void AttackSingle()
         {
             Drop();
             Throw();

@@ -27,7 +27,7 @@ namespace Weapons.ShootingWeapons
             CurrentAmmoAmount = clipSize;
         }
 
-        public override void Attack()
+        public override void AttackSingle()
         {
             if (CurrentAmmoAmount <= 0)
             {

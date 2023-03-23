@@ -446,6 +446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponInfo: {fileID: 11400000, guid: de9ed99539d70014d92b3cd01d8abfcb, type: 2}
   damage: 10
+  CurrentAmount: 1
   maxAmount: 2
   force: 50
 --- !u!1 &8290338939768179094

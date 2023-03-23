@@ -1,4 +1,6 @@
-﻿using Damageable;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Damageable;
 using UnityEngine;
 
 namespace Weapons.ThrowableWeapons
@@ -7,12 +9,15 @@ namespace Weapons.ThrowableWeapons
     {
         [SerializeField] protected int maxAmount;
         [SerializeField] protected float force;
-        protected int CurrentAmount;
 
-        public override void Attack()
+        public override void AttackSingle()
         {
             Drop();
             Rigidbody.AddForce(transform.forward * force, ForceMode.Impulse);
+        }
+
+        public override void AttackHold()
+        {
         }
 
         protected virtual void OnCollisionEnter(Collision other)
@@ -24,6 +29,23 @@ namespace Weapons.ThrowableWeapons
             }
         }
 
-        //TODO: add weapon stacking
+        public override bool TryAddToInventory(List<WeaponBase> inventory)
+        {
+            if (inventory.Any(weapon => weapon.GetWeaponInfo().weaponName == GetWeaponInfo().weaponName))
+            {
+                var weapon = inventory.First(weapon => weapon.GetWeaponInfo().weaponName == GetWeaponInfo().weaponName);
+                if (weapon.CurrentAmount < maxAmount)
+                {
+                    weapon.CurrentAmount++;
+                    Destroy(gameObject);
+                    return true;
+                }
+
+                return false;
+            }
+
+            inventory.Add(this);
+            return true;
+        }
     }
 }

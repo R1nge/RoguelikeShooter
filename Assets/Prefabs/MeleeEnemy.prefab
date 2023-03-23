@@ -147,11 +147,11 @@ GameObject:
   - component: {fileID: 3236850290993764527}
   - component: {fileID: 3236850290993764520}
   - component: {fileID: 3236850290993764525}
-  - component: {fileID: 3236850290993764524}
-  - component: {fileID: 3236850290993764514}
-  - component: {fileID: 3236850290993764515}
   - component: {fileID: 982694554829205242}
   - component: {fileID: 5792511610162667203}
+  - component: {fileID: 7695545983995279433}
+  - component: {fileID: 6235064378381457093}
+  - component: {fileID: 2555138786918756217}
   m_Layer: 0
   m_Name: MeleeEnemy
   m_TagString: Untagged
@@ -224,43 +224,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 3.55
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3236850290993764524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3236850290993764521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e71cc73357e52b4c81b41719f3304e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3236850290993764514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3236850290993764521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 981667b802574c95b4c6ab0c5d39aec8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypoints: []
---- !u!114 &3236850290993764515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3236850290993764521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 496e3acac50647418b6cbc879cf128cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &982694554829205242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,6 +250,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthText: {fileID: 2156741660200465188}
+--- !u!114 &7695545983995279433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3236850290993764521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e71cc73357e52b4c81b41719f3304e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6235064378381457093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3236850290993764521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 981667b802574c95b4c6ab0c5d39aec8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints: []
+--- !u!114 &2555138786918756217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3236850290993764521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 496e3acac50647418b6cbc879cf128cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3236850291584341804
 GameObject:
   m_ObjectHideFlags: 0

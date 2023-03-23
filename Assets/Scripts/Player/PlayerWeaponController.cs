@@ -22,9 +22,14 @@ namespace Player
 
         private void GetInput()
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                AttackSingle();
+            }
+
             if (Input.GetMouseButton(0))
             {
-                Attack();
+                AttackHold();
             }
 
             if (Input.GetKeyDown(KeyCode.R))
@@ -79,11 +84,39 @@ namespace Player
             }
         }
 
-        private void Attack()
+        private void AttackSingle()
         {
             if (_currentWeapon)
             {
-                _currentWeapon.Attack();
+                if (_currentWeapon.CurrentAmount > 1)
+                {
+                    _currentWeapon.AttackSingle();
+                    _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
+                    _currentWeapon.SpawnNewWeapon(weaponHolder, _weapons, ref _currentWeapon);
+                    _currentWeapon.OnWeaponRemoved += RemoveWeapon;
+                }
+                else
+                {
+                    _currentWeapon.AttackSingle();
+                }
+            }
+        }
+
+        private void AttackHold()
+        {
+            if (_currentWeapon)
+            {
+                if (_currentWeapon.CurrentAmount > 1)
+                {
+                    _currentWeapon.AttackHold();
+                    _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
+                    _currentWeapon.SpawnNewWeapon(weaponHolder, _weapons, ref _currentWeapon);
+                    _currentWeapon.OnWeaponRemoved += RemoveWeapon;
+                }
+                else
+                {
+                    _currentWeapon.AttackHold();
+                }
             }
         }
 
@@ -100,16 +133,28 @@ namespace Player
             if (weapon.TryAddToInventory(_weapons))
             {
                 weapon.Pickup(weaponHolder);
-                SelectWeapon(_weapons.Count - 1);
+                //TODO: switch on picked up weapon
+                //SelectWeapon(_weapons.Count - 1);
             }
-            
         }
 
         private void DropWeapon(WeaponBase weapon)
         {
-            _currentWeapon.OnWeaponDropped -= DropWeapon;
+            _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
             weapon.Drop();
-            weapon.RemoveFromInventory(_weapons, ref _currentWeapon);
+        }
+
+        private void RemoveWeapon(WeaponBase weapon)
+        {
+            if (weapon.CurrentAmount > 1)
+            {
+                weapon.CurrentAmount = 1;
+            }
+            else
+            {
+                _weapons.Remove(weapon);
+                _currentWeapon = null;
+            }
         }
 
         private void SelectWeapon(int index)
@@ -117,12 +162,12 @@ namespace Player
             if (_currentWeapon != null)
             {
                 _currentWeapon.gameObject.SetActive(false);
-                _currentWeapon.OnWeaponDropped -= DropWeapon;
+                _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
             }
 
             _currentWeapon = _weapons[index % _weapons.Count];
             _currentWeapon.gameObject.SetActive(true);
-            _currentWeapon.OnWeaponDropped += DropWeapon;
+            _currentWeapon.OnWeaponRemoved += RemoveWeapon;
         }
     }
 }

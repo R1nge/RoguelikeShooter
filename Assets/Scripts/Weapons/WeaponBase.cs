@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Scriptables;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Weapons
 {
@@ -14,9 +13,9 @@ namespace Weapons
         protected Rigidbody Rigidbody;
         private Collider _collider;
         protected bool CanPickup = true;
+        public int CurrentAmount = 1;
 
-        //TODO: redo
-        public event Action<WeaponBase> OnWeaponDropped;
+        public event Action<WeaponBase> OnWeaponRemoved;
 
         protected virtual void Awake()
         {
@@ -24,34 +23,50 @@ namespace Weapons
             _collider = GetComponent<Collider>();
         }
 
-        public abstract void Attack();
+        public abstract void AttackSingle();
+
+        public abstract void AttackHold();
 
         public virtual void Pickup(Transform parent)
         {
+            gameObject.SetActive(true);
             Rigidbody.isKinematic = true;
             transform.parent = parent;
+            Rigidbody.velocity = Vector3.zero;
             _collider.isTrigger = true;
             CanPickup = false;
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         public virtual void Drop()
         {
             transform.parent = null;
             Rigidbody.isKinematic = false;
-            OnWeaponDropped?.Invoke(this);
             _collider.isTrigger = false;
             CanPickup = true;
+            OnWeaponRemoved?.Invoke(this);
         }
 
-        public void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)
-        {
-            current = null;
-            inventory.Remove(this);
-        }
-
-        public virtual void AddToInventory(List<WeaponBase> inventory)
+        public virtual bool TryAddToInventory(List<WeaponBase> inventory)
         {
             inventory.Add(this);
+            return true;
+        }
+
+        public void SpawnNewWeapon(Transform parent, List<WeaponBase> inventory, ref WeaponBase current)
+        {
+            if (current.CurrentAmount >= 1)
+            {
+                var weapon = Instantiate(gameObject, parent.transform.position, Quaternion.identity, parent);
+
+                if (weapon.TryGetComponent(out WeaponBase weaponBase))
+                {
+                    weaponBase.Pickup(parent);
+                    inventory.Add(weaponBase);
+                    inventory.Remove(current);
+                    current = weaponBase;
+                }
+            }
         }
 
         public WeaponInfo GetWeaponInfo() => weaponInfo;

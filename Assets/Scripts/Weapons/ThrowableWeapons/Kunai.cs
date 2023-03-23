@@ -6,7 +6,7 @@ namespace Weapons.ThrowableWeapons
     {
         private bool _canBounce;
 
-        public override void Attack()
+        public override void AttackSingle()
         {
             Drop();
             Rigidbody.AddForce(-transform.forward * force, ForceMode.Impulse);
