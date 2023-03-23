@@ -1,11 +1,14 @@
 ﻿using Cinemachine;
 using Damageable;
+using Player;
 using UnityEngine;
 
 namespace Weapons.ThrowableWeapons
 {
-    public class Grenade : ThrowableWeaponBase
+    public class Grenade1 : WeaponBase
     {
+        [SerializeField] protected float throwForce;
+        [SerializeField] protected int damage;
         [SerializeField] protected float damageRadius;
         [SerializeField] protected float timeBeforeExplosion;
         [SerializeField] protected LayerMask layerMask;
@@ -15,18 +18,26 @@ namespace Weapons.ThrowableWeapons
 
         public override void AttackSingle()
         {
-            Drop();
+            Rigidbody.isKinematic = false;
+            transform.parent = null;
+            Collider.isTrigger = false;
             Throw();
-            CanPickup = false;
+            RemoveFromInventory();
             Invoke(nameof(Explode), timeBeforeExplosion);
         }
 
-        protected virtual void Throw()
+        public override void Pickup(Transform parent, PlayerWeaponController owner)
         {
-            //TODO: use projectile motion
+            base.Pickup(parent, owner);
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
-        protected virtual void Explode()
+        private void Throw()
+        {
+            Rigidbody.AddForce(transform.forward * throwForce, ForceMode.Impulse);
+        }
+
+        private void Explode()
         {
             impulse.GenerateImpulse();
             Instantiate(explosionSound);
@@ -50,17 +61,6 @@ namespace Weapons.ThrowableWeapons
             }
 
             Destroy(gameObject);
-        }
-
-        public override void Pickup(Transform parent)
-        {
-            if (!CanPickup) return;
-            base.Pickup(parent);
-            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-        }
-
-        protected override void OnCollisionEnter(Collision other)
-        {
         }
     }
 }

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 930d8f8fce374474a9988aff4b7abcca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayDistance: 15
+  rayDistance: 4
   layerMask:
     serializedVersion: 2
     m_Bits: 65
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d53e636cff44ab79fe39774d040ffd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayDistance: 15
+  rayDistance: 4
   layerMask:
     serializedVersion: 2
     m_Bits: 65
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e30e4951fc5413e8acd95b1535f0708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayDistance: 15
+  rayDistance: 4
   layerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactText: {fileID: 2416639375648090444}
-  rayDistance: 15
+  rayDistance: 4
   layerMask:
     serializedVersion: 2
     m_Bits: 1

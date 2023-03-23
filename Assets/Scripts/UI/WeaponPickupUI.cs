@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using Weapons;
+using Weapons.ShootingWeapons;
 
 namespace UI
 {

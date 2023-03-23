@@ -11,9 +11,25 @@ namespace Player
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private Camera playerCamera;
-        private WeaponBase _currentWeapon;
-        private readonly List<WeaponBase> _weapons = new();
-        private int _lastWeaponIndex;
+        private List<WeaponBase> _weapons = new();
+        private int _currentWeaponIndex;
+
+        public List<WeaponBase> GetWeapons() => _weapons;
+
+        public void SelectLastWeapon()
+        {
+            _currentWeaponIndex = _weapons.Count;
+            if (_currentWeaponIndex - 1 < 0)
+            {
+                _currentWeaponIndex = 0;
+            }
+            else
+            {
+                _currentWeaponIndex = _weapons.Count - 1;
+            }
+            
+            SelectWeapon(_currentWeaponIndex);
+        }
 
         private void Update()
         {
@@ -22,53 +38,47 @@ namespace Player
 
         private void GetInput()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (_weapons.Count > 0)
             {
-                AttackSingle();
-            }
+                if (_weapons[_currentWeaponIndex] != null)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        AttackSingle();
+                    }
 
-            if (Input.GetMouseButton(0))
-            {
-                AttackHold();
-            }
+                    if (Input.GetMouseButton(0))
+                    {
+                        AttackHold();
+                    }
 
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                Reload();
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        Reload();
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.G))
+                    {
+                        DropWeapon();
+                    }
+                }
+
+                if (_weapons.Count >= 1)
+                {
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        SelectWeapon((_currentWeaponIndex + 1) % _weapons.Count);
+                    }
+                    else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        SelectWeapon(Mathf.Abs(_currentWeaponIndex - 1) % _weapons.Count);
+                    }
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Raycast();
-            }
-
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                DropWeapon(_currentWeapon);
-            }
-
-            if (_weapons.Count >= 1)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    SelectWeapon(0);
-                }
-
-                if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    SelectWeapon(1);
-                }
-
-                if (Input.GetAxis("Mouse ScrollWheel") > 0)
-                {
-                    _lastWeaponIndex = (_lastWeaponIndex + 1) % _weapons.Count;
-                    SelectWeapon(_lastWeaponIndex);
-                }
-                else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-                {
-                    _lastWeaponIndex = Mathf.Abs(_lastWeaponIndex - 1) % _weapons.Count;
-                    SelectWeapon(_lastWeaponIndex);
-                }
             }
         }
 
@@ -86,86 +96,47 @@ namespace Player
 
         private void AttackSingle()
         {
-            if (_currentWeapon)
-            {
-                if (_currentWeapon.CurrentAmount > 1)
-                {
-                    //TODO: redo
-                    var tempAmount = _currentWeapon.CurrentAmount;
-                    _currentWeapon.AttackSingle();
-                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
-                    _currentWeapon.SpawnNewWeapon(weaponHolder, _weapons, ref _currentWeapon);
-                    _currentWeapon.CurrentAmount = tempAmount - 1;
-                }
-                else
-                {
-                    _currentWeapon.AttackSingle();
-                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
-                }
-            }
-
-            print("Single");
+            _weapons[_currentWeaponIndex]?.AttackSingle();
         }
 
         private void AttackHold()
         {
-            if (_currentWeapon)
-            {
-                if (_currentWeapon.CurrentAmount > 1)
-                {
-                    //TODO: redo
-                    var tempAmount = _currentWeapon.CurrentAmount;
-                    _currentWeapon.AttackHold();
-                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
-                    _currentWeapon.SpawnNewWeapon(weaponHolder, _weapons, ref _currentWeapon);
-                    _currentWeapon.CurrentAmount = tempAmount - 1;
-                }
-                else
-                {
-                    _currentWeapon.AttackHold();
-                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
-                }
-            }
-
-            print("Hold");
+            _weapons[_currentWeaponIndex]?.AttackHold();
         }
 
         private void Reload()
         {
-            if (_currentWeapon)
-            {
-                if (_currentWeapon.TryGetComponent(out ShootingWeaponBase shootingWeapon))
-                {
-                    shootingWeapon.Reload();
-                }
-            }
+            var weapon = (ShootingWeaponBase)_weapons[_currentWeaponIndex];
+            weapon.Reload();
         }
 
         private void PickupWeapon(WeaponBase weapon)
         {
-            if (weapon.TryAddToInventory(_weapons))
-            {
-                weapon.Pickup(weaponHolder);
-                SelectWeapon(_weapons.Count - 1);
-            }
+            weapon.Pickup(weaponHolder, this);
+            AddWeapon(weapon);
         }
 
-        private void DropWeapon(WeaponBase weapon)
+        private void AddWeapon(WeaponBase weapon)
         {
-            weapon.Drop();
-            _weapons.Remove(_currentWeapon);
-            _currentWeapon = null;
+            _weapons.Add(weapon);
+            SelectWeapon(_weapons.Count - 1);
+        }
+
+        private void DropWeapon()
+        {
+            _weapons[_currentWeaponIndex]?.Drop();
         }
 
         private void SelectWeapon(int index)
         {
-            if (_currentWeapon != null)
+            if (_weapons.Count <= 0) return;
+            if (_weapons[_currentWeaponIndex] != null)
             {
-                _currentWeapon.gameObject.SetActive(false);
+                _weapons[_currentWeaponIndex].gameObject.SetActive(false);
             }
 
-            _currentWeapon = _weapons[index % _weapons.Count];
-            _currentWeapon.gameObject.SetActive(true);
+            _currentWeaponIndex = index;
+            _weapons[_currentWeaponIndex].gameObject.SetActive(true);
         }
     }
 }

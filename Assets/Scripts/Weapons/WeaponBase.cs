@@ -1,74 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Player;
 using Scriptables;
 using UnityEngine;
 
 namespace Weapons
 {
-    [RequireComponent(typeof(Rigidbody))]
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] protected WeaponInfo weaponInfo;
-        [SerializeField] protected int damage;
-        protected Rigidbody Rigidbody;
-        private Collider _collider;
         protected bool CanPickup = true;
-        public int CurrentAmount = 1;
+        protected Rigidbody Rigidbody;
+        protected Collider Collider;
+        protected PlayerWeaponController Owner;
+
+        public WeaponInfo GetWeaponInfo() => weaponInfo;
+        public bool CanPickupWeapon() => CanPickup;
 
         protected virtual void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
-            _collider = GetComponent<Collider>();
+            Collider = GetComponent<Collider>();
         }
 
-        public abstract void AttackSingle();
-
-        public abstract void AttackHold();
-
-        public virtual void Pickup(Transform parent)
+        public virtual void AttackSingle()
         {
-            gameObject.SetActive(true);
-            Rigidbody.isKinematic = true;
-            transform.parent = parent;
-            Rigidbody.velocity = Vector3.zero;
-            _collider.isTrigger = true;
+        }
+
+        public virtual void AttackHold()
+        {
+        }
+
+        public virtual void Pickup(Transform parent, PlayerWeaponController owner)
+        {
+            if (!CanPickup) return;
             CanPickup = false;
-            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            transform.parent = parent;
+            Rigidbody.isKinematic = true;
+            Collider.isTrigger = true;
+            Owner = owner;
         }
 
         public virtual void Drop()
         {
+            CanPickup = true;
             transform.parent = null;
             Rigidbody.isKinematic = false;
-            _collider.isTrigger = false;
-            CanPickup = true;
+            Collider.isTrigger = false;
+            RemoveFromInventory();
         }
 
-        public virtual bool TryAddToInventory(List<WeaponBase> inventory)
+        public void RemoveFromInventory()
         {
-            inventory.Add(this);
-            return true;
+            //TODO: redo
+            Owner.GetWeapons().Remove(this);
+            Owner.SelectLastWeapon();
+            Owner = null;
         }
-
-        public virtual void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)
-        {
-        }
-
-        public void SpawnNewWeapon(Transform parent, List<WeaponBase> inventory, ref WeaponBase current)
-        {
-            var weapon = Instantiate(gameObject, parent.transform.position, Quaternion.identity, parent);
-
-            if (weapon.TryGetComponent(out WeaponBase weaponBase))
-            {
-                weaponBase.Pickup(parent);
-                inventory.Add(weaponBase);
-                inventory.Remove(current);
-                current = weaponBase;
-            }
-        }
-
-        public WeaponInfo GetWeaponInfo() => weaponInfo;
-
-        public bool CanPickupWeapon() => CanPickup;
     }
 }
