@@ -11,7 +11,7 @@ namespace Player
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private Camera playerCamera;
-        private List<WeaponBase> _weapons = new();
+        private readonly List<WeaponBase> _weapons = new();
         private int _currentWeaponIndex;
 
         public List<WeaponBase> GetWeapons() => _weapons;
@@ -76,8 +76,12 @@ namespace Player
                     }
                     else if (Input.GetAxis("Mouse ScrollWheel") < 0)
                     {
-                        //TODO: fix
-                        SelectWeapon(Mathf.Abs(_currentWeaponIndex - 1) % _weapons.Count);
+                        var index = (_currentWeaponIndex - 1) % _weapons.Count;
+                        if (index < 0)
+                        {
+                            index = _weapons.Count - 1;
+                        }
+                        SelectWeapon(index);
                     }
                 }
             }
