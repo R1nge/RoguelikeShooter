@@ -7,6 +7,7 @@ namespace Damageable
     {
         [SerializeField] private int damage;
         [SerializeField] private float damageRadius;
+        [SerializeField] private LayerMask layerMask;
         [SerializeField] private CinemachineImpulseSource impulse;
         [SerializeField] private AudioSource explosionSound;
         private readonly Collider[] _hits = new Collider[30];
@@ -14,7 +15,7 @@ namespace Damageable
 
         public void TakeDamage(int amount)
         {
-            if(_exploded) return;
+            if (_exploded) return;
             Explode();
         }
 
@@ -29,7 +30,7 @@ namespace Damageable
 
         private void Damage()
         {
-            var hits = Physics.OverlapSphereNonAlloc(transform.position, damageRadius, _hits);
+            var hits = Physics.OverlapSphereNonAlloc(transform.position, damageRadius, _hits, layerMask);
             if (hits == 0) return;
             for (int i = 1; i < hits; i++)
             {
