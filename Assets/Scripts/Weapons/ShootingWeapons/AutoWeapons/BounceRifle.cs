@@ -2,7 +2,7 @@
 
 namespace Weapons.ShootingWeapons.AutoWeapons
 {
-    public class RifleExample : ShootingWeaponBase
+    public class BounceRifle : ShootingWeaponBase
     {
         public override void AttackSingle()
         {

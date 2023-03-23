@@ -29,6 +29,19 @@ namespace Weapons.ThrowableWeapons
             }
         }
 
+        public override void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)
+        {
+            if (CurrentAmount > 1)
+            {
+                CurrentAmount = 1;
+            }
+            else
+            {
+                inventory.Remove(current);
+                current = null;
+            }
+        }
+
         public override bool TryAddToInventory(List<WeaponBase> inventory)
         {
             if (inventory.Any(weapon => weapon.GetWeaponInfo().weaponName == GetWeaponInfo().weaponName))

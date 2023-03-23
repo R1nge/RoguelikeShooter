@@ -15,8 +15,6 @@ namespace Weapons
         protected bool CanPickup = true;
         public int CurrentAmount = 1;
 
-        public event Action<WeaponBase> OnWeaponRemoved;
-
         protected virtual void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
@@ -44,7 +42,6 @@ namespace Weapons
             Rigidbody.isKinematic = false;
             _collider.isTrigger = false;
             CanPickup = true;
-            OnWeaponRemoved?.Invoke(this);
         }
 
         public virtual bool TryAddToInventory(List<WeaponBase> inventory)
@@ -53,19 +50,20 @@ namespace Weapons
             return true;
         }
 
+        public virtual void RemoveFromInventory(List<WeaponBase> inventory, ref WeaponBase current)
+        {
+        }
+
         public void SpawnNewWeapon(Transform parent, List<WeaponBase> inventory, ref WeaponBase current)
         {
-            if (current.CurrentAmount >= 1)
-            {
-                var weapon = Instantiate(gameObject, parent.transform.position, Quaternion.identity, parent);
+            var weapon = Instantiate(gameObject, parent.transform.position, Quaternion.identity, parent);
 
-                if (weapon.TryGetComponent(out WeaponBase weaponBase))
-                {
-                    weaponBase.Pickup(parent);
-                    inventory.Add(weaponBase);
-                    inventory.Remove(current);
-                    current = weaponBase;
-                }
+            if (weapon.TryGetComponent(out WeaponBase weaponBase))
+            {
+                weaponBase.Pickup(parent);
+                inventory.Add(weaponBase);
+                inventory.Remove(current);
+                current = weaponBase;
             }
         }
 

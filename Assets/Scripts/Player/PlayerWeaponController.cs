@@ -90,16 +90,21 @@ namespace Player
             {
                 if (_currentWeapon.CurrentAmount > 1)
                 {
+                    //TODO: redo
+                    var tempAmount = _currentWeapon.CurrentAmount;
                     _currentWeapon.AttackSingle();
-                    _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
+                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
                     _currentWeapon.SpawnNewWeapon(weaponHolder, _weapons, ref _currentWeapon);
-                    _currentWeapon.OnWeaponRemoved += RemoveWeapon;
+                    _currentWeapon.CurrentAmount = tempAmount - 1;
                 }
                 else
                 {
                     _currentWeapon.AttackSingle();
+                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
                 }
             }
+
+            print("Single");
         }
 
         private void AttackHold()
@@ -108,23 +113,31 @@ namespace Player
             {
                 if (_currentWeapon.CurrentAmount > 1)
                 {
+                    //TODO: redo
+                    var tempAmount = _currentWeapon.CurrentAmount;
                     _currentWeapon.AttackHold();
-                    _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
+                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
                     _currentWeapon.SpawnNewWeapon(weaponHolder, _weapons, ref _currentWeapon);
-                    _currentWeapon.OnWeaponRemoved += RemoveWeapon;
+                    _currentWeapon.CurrentAmount = tempAmount - 1;
                 }
                 else
                 {
                     _currentWeapon.AttackHold();
+                    _currentWeapon.RemoveFromInventory(_weapons, ref _currentWeapon);
                 }
             }
+
+            print("Hold");
         }
 
         private void Reload()
         {
-            if (_currentWeapon.TryGetComponent(out ShootingWeaponBase shootingWeapon))
+            if (_currentWeapon)
             {
-                shootingWeapon.Reload();
+                if (_currentWeapon.TryGetComponent(out ShootingWeaponBase shootingWeapon))
+                {
+                    shootingWeapon.Reload();
+                }
             }
         }
 
@@ -133,28 +146,15 @@ namespace Player
             if (weapon.TryAddToInventory(_weapons))
             {
                 weapon.Pickup(weaponHolder);
-                //TODO: switch on picked up weapon
-                //SelectWeapon(_weapons.Count - 1);
+                SelectWeapon(_weapons.Count - 1);
             }
         }
 
         private void DropWeapon(WeaponBase weapon)
         {
-            _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
             weapon.Drop();
-        }
-
-        private void RemoveWeapon(WeaponBase weapon)
-        {
-            if (weapon.CurrentAmount > 1)
-            {
-                weapon.CurrentAmount = 1;
-            }
-            else
-            {
-                _weapons.Remove(weapon);
-                _currentWeapon = null;
-            }
+            _weapons.Remove(_currentWeapon);
+            _currentWeapon = null;
         }
 
         private void SelectWeapon(int index)
@@ -162,12 +162,10 @@ namespace Player
             if (_currentWeapon != null)
             {
                 _currentWeapon.gameObject.SetActive(false);
-                _currentWeapon.OnWeaponRemoved -= RemoveWeapon;
             }
 
             _currentWeapon = _weapons[index % _weapons.Count];
             _currentWeapon.gameObject.SetActive(true);
-            _currentWeapon.OnWeaponRemoved += RemoveWeapon;
         }
     }
 }
