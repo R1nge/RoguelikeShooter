@@ -42,6 +42,11 @@ namespace Weapons.ShootingWeapons
             }
         }
 
+        public override void StopAttack()
+        {
+            animator.SetBool("Shoot", false);
+        }
+
         public void Reload()
         {
             if (_reloadCoroutine != null) return;
@@ -51,7 +56,10 @@ namespace Weapons.ShootingWeapons
         private IEnumerator Reload_c()
         {
             CanShoot = false;
+            animator.SetTrigger("Reload");
+            animator.SetBool("Shoot", false);
             yield return new WaitForSeconds(reloadTime);
+            animator.ResetTrigger("Reload");
             CurrentAmmoAmount = clipSize;
             CanShoot = true;
             _reloadCoroutine = null;
@@ -64,6 +72,7 @@ namespace Weapons.ShootingWeapons
                 _nextFire = Time.time + 1 / (fireRate / 60);
                 Raycast();
                 CurrentAmmoAmount--;
+                animator.SetBool("Shoot", true);
             }
         }
 

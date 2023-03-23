@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using Player;
+﻿using Player;
 using Scriptables;
 using UnityEngine;
 
 namespace Weapons
 {
+    [RequireComponent(typeof(Rigidbody))]
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] private Vector3 positionOffset, rotationOffset;
         [SerializeField] protected WeaponInfo weaponInfo;
+        [SerializeField] protected Animator animator;
         protected bool CanPickup = true;
         protected Rigidbody Rigidbody;
         protected Collider Collider;
@@ -29,6 +30,11 @@ namespace Weapons
 
         public virtual void AttackHold()
         {
+        }
+
+        public virtual void StopAttack()
+        {
+            
         }
 
         public virtual void Pickup(Transform parent, PlayerWeaponController owner)

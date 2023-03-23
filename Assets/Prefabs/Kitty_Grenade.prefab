@@ -78,6 +78,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8fa673a33c5432e86ded6b66ab14437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  positionOffset: {x: 0, y: 0.35, z: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
   weaponInfo: {fileID: 11400000, guid: 041b54ec6e9bfc548899e245710e18b7, type: 2}
   throwForce: 10
   damage: 10

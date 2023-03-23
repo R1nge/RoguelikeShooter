@@ -52,6 +52,11 @@ namespace Player
                         AttackHold();
                     }
 
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        _weapons[_currentWeaponIndex].StopAttack();
+                    }
+
                     if (Input.GetKeyDown(KeyCode.R))
                     {
                         Reload();
@@ -71,6 +76,7 @@ namespace Player
                     }
                     else if (Input.GetAxis("Mouse ScrollWheel") < 0)
                     {
+                        //TODO: fix
                         SelectWeapon(Mathf.Abs(_currentWeaponIndex - 1) % _weapons.Count);
                     }
                 }
