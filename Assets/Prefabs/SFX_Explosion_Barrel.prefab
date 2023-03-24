@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6945249451151398799}
   - component: {fileID: -7984871705211893452}
   m_Layer: 0
-  m_Name: Barrel_Explosion_SFX
+  m_Name: SFX_Explosion_Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

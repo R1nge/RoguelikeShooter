@@ -167,6 +167,7 @@ MonoBehaviour:
     m_Bits: 129
   impulse: {fileID: 4201803859147020404}
   explosionSound: {fileID: 6945249451151398799, guid: f9355b2dae005a84ebbd5dad05994d6a, type: 3}
+  explosionVfx: {fileID: 7634388131057834423, guid: 2b4c102e45482ff48aa8d438df538f90, type: 3}
 --- !u!114 &4201803859147020404
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ namespace Weapons.ThrowableWeapons
         [SerializeField] protected LayerMask layerMask;
         [SerializeField] protected CinemachineImpulseSource impulse;
         [SerializeField] protected AudioSource explosionSound;
+        [SerializeField] protected GameObject explosionVfx;
         private readonly Collider[] _hits = new Collider[30];
 
         public override void AttackSingle()
@@ -26,12 +27,6 @@ namespace Weapons.ThrowableWeapons
             Invoke(nameof(Explode), timeBeforeExplosion);
         }
 
-        public override void Pickup(Transform parent, PlayerWeaponController owner)
-        {
-            base.Pickup(parent, owner);
-            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-        }
-
         private void Throw()
         {
             Rigidbody.AddForce(transform.forward * throwForce, ForceMode.Impulse);
@@ -40,8 +35,10 @@ namespace Weapons.ThrowableWeapons
         private void Explode()
         {
             impulse.GenerateImpulse();
-            Instantiate(explosionSound);
+            Instantiate(explosionSound, transform.position, Quaternion.identity);
+            Instantiate(explosionVfx, transform.position, Quaternion.identity);
             Damage();
+            Destroy(gameObject);
         }
 
         private void Damage()
@@ -51,7 +48,7 @@ namespace Weapons.ThrowableWeapons
             for (int i = 0; i < hits; i++)
             {
                 var hitTransform = _hits[i].transform;
-                if (Physics.Raycast(transform.position, hitTransform.position, out var hit, damageRadius))
+                if (Physics.Raycast(transform.position, hitTransform.position - transform.position, out var hit, damageRadius))
                 {
                     if (hit.transform.TryGetComponent(out IDamageable damageable))
                     {
@@ -59,8 +56,6 @@ namespace Weapons.ThrowableWeapons
                     }
                 }
             }
-
-            Destroy(gameObject);
         }
     }
 }

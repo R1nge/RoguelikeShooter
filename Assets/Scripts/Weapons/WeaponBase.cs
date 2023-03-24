@@ -41,7 +41,7 @@ namespace Weapons
             WeaponAnimatorControllerBase.StopAttack();
         }
 
-        public virtual void Pickup(Transform parent, PlayerWeaponController owner)
+        public void Pickup(Transform parent, PlayerWeaponController owner)
         {
             if (!CanPickup) return;
             CanPickup = false;
@@ -52,7 +52,7 @@ namespace Weapons
             transform.SetLocalPositionAndRotation(positionOffset, Quaternion.Euler(rotationOffset));
         }
 
-        public virtual void Drop()
+        public void Drop()
         {
             CanPickup = true;
             transform.parent = null;
@@ -63,7 +63,6 @@ namespace Weapons
 
         protected void RemoveFromInventory()
         {
-            //TODO: redo
             Owner.GetWeapons().Remove(this);
             Owner.SelectLastWeapon();
             Owner = null;
