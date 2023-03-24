@@ -21,17 +21,28 @@ namespace Weapons.ThrowableWeapons
             CanPickup = true;
         }
 
+        public override void Pickup(Transform parent, PlayerWeaponController owner)
+        {
+            base.Pickup(parent, owner);
+            _canBounce = false;
+        }
+
+        public override void Drop()
+        {
+            base.Drop();
+            _canBounce = false;
+        }
+
         private void OnCollisionEnter(Collision other)
         {
+            if (_canBounce)
+            {
+                var dir = Vector3.Reflect(Rigidbody.velocity, other.contacts[0].normal);
+                Rigidbody.AddForce(dir * throwForce, ForceMode.Impulse);
+            }
+
             if (other.gameObject.TryGetComponent(out IDamageable damageable))
             {
-                if (_canBounce)
-                {
-                    var dir = Vector3.Reflect(other.contacts[0].point - transform.position, other.contacts[0].normal);
-                    Rigidbody.AddForce(dir * throwForce, ForceMode.Impulse);
-                    _canBounce = false;
-                }
-
                 damageable.TakeDamage(damage);
             }
         }

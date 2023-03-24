@@ -1,5 +1,6 @@
 ﻿using Interactable;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
@@ -8,14 +9,15 @@ namespace Player
         [SerializeField] private float rayDistance;
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private Camera playerCamera;
+        [SerializeField] private InputActionAsset actions;
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Raycast();
-            }
-        }
+        private void OnEnable() => actions.Enable();
+
+        private void OnDisable() => actions.Disable();
+
+        private void Awake() => actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
+
+        private void Interact(InputAction.CallbackContext context) => Raycast();
 
         private void Raycast()
         {

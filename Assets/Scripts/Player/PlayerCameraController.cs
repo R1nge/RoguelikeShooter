@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
@@ -7,9 +8,16 @@ namespace Player
         [SerializeField] private Camera playerCamera;
         [SerializeField] private float lookSpeed = 2f;
         [SerializeField] private float lookXLimit = 90f;
-
+        [SerializeField] private InputActionAsset actions;
+        private InputAction _lookAction;
         private bool _canMove = true;
         private float _rotationX;
+
+        private void OnEnable() => actions.Enable();
+
+        private void OnDisable() => actions.Disable();
+
+        private void Awake() => _lookAction = actions.FindActionMap("Player").FindAction("Look");
 
         private void Update()
         {
@@ -21,10 +29,10 @@ namespace Player
         {
             if (_canMove)
             {
-                _rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+                _rotationX += -_lookAction.ReadValue<Vector2>().y * lookSpeed;
                 _rotationX = Mathf.Clamp(_rotationX, -lookXLimit, lookXLimit);
                 playerCamera.transform.localRotation = Quaternion.Euler(_rotationX, 0, 0);
-                transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+                transform.rotation *= Quaternion.Euler(0, _lookAction.ReadValue<Vector2>().x * lookSpeed, 0);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Weapons;
 using Weapons.ShootingWeapons;
 
@@ -11,12 +12,44 @@ namespace Player
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private Camera playerCamera;
+        [SerializeField] private InputActionAsset actions;
+        private InputAction _weaponScroll;
         private readonly List<WeaponBase> _weapons = new();
         private int _currentWeaponIndex;
 
         public Camera GetPlayerCamera() => playerCamera;
 
         public List<WeaponBase> GetWeapons() => _weapons;
+
+        private void OnEnable() => actions.Enable();
+
+        private void OnDisable() => actions.Disable();
+
+        private void Awake()
+        {
+            actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
+            actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed += PrimaryAttackSingle;
+            actions.FindActionMap("Player").FindAction("PrimaryAttackHold").performed += PrimaryAttackHold;
+            actions.FindActionMap("Player").FindAction("StopAttack").performed += StopAttack;
+            actions.FindActionMap("Player").FindAction("Reload").performed += Reload;
+            actions.FindActionMap("Player").FindAction("Drop").performed += DropWeapon;
+            _weaponScroll = actions.FindActionMap("Player").FindAction("WeaponScroll");
+        }
+
+        private void OnDestroy()
+        {
+            actions.FindActionMap("Player").FindAction("Interact").performed -= Interact;
+            actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed -= PrimaryAttackSingle;
+            actions.FindActionMap("Player").FindAction("PrimaryAttackHold").performed -= PrimaryAttackHold;
+            actions.FindActionMap("Player").FindAction("StopAttack").performed -= StopAttack;
+            actions.FindActionMap("Player").FindAction("Reload").performed -= Reload;
+            actions.FindActionMap("Player").FindAction("Drop").performed -= DropWeapon;
+        }
+
+        private void Interact(InputAction.CallbackContext context)
+        {
+            Raycast();
+        }
 
         public void SelectLastWeapon()
         {
@@ -29,68 +62,34 @@ namespace Player
             {
                 _currentWeaponIndex = _weapons.Count - 1;
             }
-            
+
             SelectWeapon(_currentWeaponIndex);
         }
 
         private void Update()
         {
-            GetInput();
+            WeaponScroll();
         }
 
-        private void GetInput()
+        private void WeaponScroll()
         {
-            if (_weapons.Count > 0)
+            if (_weapons.Count >= 1)
             {
-                if (_weapons[_currentWeaponIndex] != null)
+                var scroll = _weaponScroll.ReadValue<float>();
+                if (scroll > 0)
                 {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        AttackSingle();
-                    }
-
-                    if (Input.GetMouseButton(0))
-                    {
-                        AttackHold();
-                    }
-
-                    if (Input.GetMouseButtonUp(0))
-                    {
-                        _weapons[_currentWeaponIndex].StopAttack();
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        Reload();
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.G))
-                    {
-                        DropWeapon();
-                    }
+                    SelectWeapon((_currentWeaponIndex + 1) % _weapons.Count);
                 }
-
-                if (_weapons.Count >= 1)
+                else if (scroll < 0)
                 {
-                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    var index = (_currentWeaponIndex - 1) % _weapons.Count;
+                    if (index < 0)
                     {
-                        SelectWeapon((_currentWeaponIndex + 1) % _weapons.Count);
+                        index = _weapons.Count - 1;
                     }
-                    else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-                    {
-                        var index = (_currentWeaponIndex - 1) % _weapons.Count;
-                        if (index < 0)
-                        {
-                            index = _weapons.Count - 1;
-                        }
-                        SelectWeapon(index);
-                    }
-                }
-            }
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Raycast();
+                    SelectWeapon(index);
+                }
             }
         }
 
@@ -106,28 +105,35 @@ namespace Player
             }
         }
 
-        private void AttackSingle()
-        {
-            _weapons[_currentWeaponIndex].AttackSingle();
-        }
-
-        private void AttackHold()
-        {
-            if(_weapons.Count <= 0) return;
-            if(_weapons[_currentWeaponIndex] == null) return;
-            _weapons[_currentWeaponIndex].AttackHold();
-        }
-
-        private void Reload()
-        {
-            var weapon = (ShootingWeaponBase)_weapons[_currentWeaponIndex];
-            weapon.Reload();
-        }
-
         private void PickupWeapon(WeaponBase weapon)
         {
             weapon.Pickup(weaponHolder, this);
             AddWeapon(weapon);
+        }
+
+        private void PrimaryAttackSingle(InputAction.CallbackContext context)
+        {
+            if (!HasWeapon()) return;
+            _weapons[_currentWeaponIndex].AttackSingle();
+        }
+
+        private void PrimaryAttackHold(InputAction.CallbackContext context)
+        {
+            if (!HasWeapon()) return;
+            _weapons[_currentWeaponIndex].AttackHold();
+        }
+
+        private void StopAttack(InputAction.CallbackContext obj)
+        {
+            if (!HasWeapon()) return;
+            _weapons[_currentWeaponIndex].StopAttack();
+        }
+
+        private void Reload(InputAction.CallbackContext context)
+        {
+            if (!HasWeapon()) return;
+            var weapon = (ShootingWeaponBase)_weapons[_currentWeaponIndex];
+            weapon.Reload();
         }
 
         private void AddWeapon(WeaponBase weapon)
@@ -136,9 +142,10 @@ namespace Player
             SelectWeapon(_weapons.Count - 1);
         }
 
-        private void DropWeapon()
+        private void DropWeapon(InputAction.CallbackContext context)
         {
-            _weapons[_currentWeaponIndex]?.Drop();
+            if (!HasWeapon()) return;
+            _weapons[_currentWeaponIndex].Drop();
         }
 
         private void SelectWeapon(int index)
@@ -151,6 +158,13 @@ namespace Player
 
             _currentWeaponIndex = index;
             _weapons[_currentWeaponIndex].gameObject.SetActive(true);
+        }
+
+        private bool HasWeapon()
+        {
+            if (_weapons.Count <= 0) return false;
+            if (_weapons[_currentWeaponIndex] == null) return false;
+            return true;
         }
     }
 }
