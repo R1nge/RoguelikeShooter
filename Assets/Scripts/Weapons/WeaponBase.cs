@@ -9,10 +9,7 @@ namespace Weapons
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] private Vector3 positionOffset, rotationOffset;
-
         [SerializeField] protected WeaponInfo weaponInfo;
-
-        //TODO: move animator to separate class
         protected bool CanPickup = true;
         protected Rigidbody Rigidbody;
         protected Collider Collider;
