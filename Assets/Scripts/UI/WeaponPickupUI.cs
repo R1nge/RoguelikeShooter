@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Cysharp.Text;
 using TMPro;
 using UnityEngine;
 using Weapons;
-using Weapons.ShootingWeapons;
 
 namespace UI
 {
@@ -24,8 +23,8 @@ namespace UI
                     if (weapon.CanPickupWeapon())
                     {
                         var weaponInfo = weapon.GetWeaponInfo();
-                        text.text = $"Pickup: {weaponInfo.weaponName}";
-                        text.color = weaponInfo.rarenessColors.colors[(int) weaponInfo.rareness];
+                        text.SetTextFormat("Pickup: {0}", weaponInfo.weaponName);
+                        text.color = weaponInfo.rarenessColors.colors[(int)weaponInfo.rareness];
                     }
                     else
                     {

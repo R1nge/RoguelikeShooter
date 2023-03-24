@@ -14,6 +14,8 @@ namespace Player
         private readonly List<WeaponBase> _weapons = new();
         private int _currentWeaponIndex;
 
+        public Camera GetPlayerCamera() => playerCamera;
+
         public List<WeaponBase> GetWeapons() => _weapons;
 
         public void SelectLastWeapon()
@@ -106,13 +108,14 @@ namespace Player
 
         private void AttackSingle()
         {
-            _weapons[_currentWeaponIndex]?.AttackSingle();
+            _weapons[_currentWeaponIndex].AttackSingle();
         }
 
         private void AttackHold()
         {
-            //TODO: fix
-            _weapons[_currentWeaponIndex]?.AttackHold();
+            if(_weapons.Count <= 0) return;
+            if(_weapons[_currentWeaponIndex] == null) return;
+            _weapons[_currentWeaponIndex].AttackHold();
         }
 
         private void Reload()

@@ -14,7 +14,6 @@ namespace Weapons.ShootingWeapons
         protected float fireRate;
 
         [SerializeField] protected float reloadTime;
-        [SerializeField] protected Transform shootPoint;
         [SerializeField] protected LayerMask hitLayer;
         protected bool CanShoot = true;
         protected int CurrentAmmoAmount;
@@ -78,7 +77,8 @@ namespace Weapons.ShootingWeapons
 
         private void Raycast()
         {
-            Ray ray = new Ray(shootPoint.position, shootPoint.forward);
+            var cameraTransform = Owner.GetPlayerCamera().transform;
+            Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
             if (Physics.Raycast(ray, out var hit, shootDistance, hitLayer))
             {
                 if (hit.transform.TryGetComponent(out IDamageable damageable))

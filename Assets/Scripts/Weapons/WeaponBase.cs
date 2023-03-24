@@ -9,6 +9,7 @@ namespace Weapons
     {
         [SerializeField] private Vector3 positionOffset, rotationOffset;
         [SerializeField] protected WeaponInfo weaponInfo;
+        //TODO: move animator to separate class
         [SerializeField] protected Animator animator;
         protected bool CanPickup = true;
         protected Rigidbody Rigidbody;

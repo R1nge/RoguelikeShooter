@@ -20,7 +20,7 @@ namespace UI
             {
                 if (hit.transform.TryGetComponent(out IInteractable _))
                 {
-                    interactText.text = "Interact";
+                    interactText.SetText("Interact");
                     interactText.color = Color.white;
                 }
             }
