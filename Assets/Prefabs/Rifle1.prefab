@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4407278967010278185}
   - component: {fileID: 4407278967010278186}
   - component: {fileID: 4407278967010278187}
-  - component: {fileID: 4407278967010278184}
   - component: {fileID: 6798301024366010311}
+  - component: {fileID: 4407278967010278184}
+  - component: {fileID: 6111622474303851279}
   m_Layer: 0
   m_Name: Rifle1
   m_TagString: Untagged
@@ -66,32 +67,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0589689, y: 0.31964517, z: 0.92610884}
   m_Center: {x: 0.003818214, y: 0.031396747, z: 0.08089244}
---- !u!114 &4407278967010278184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4407278967010278190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6d340296feb483d95d840391df67254, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0.35, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  weaponInfo: {fileID: 11400000, guid: aadca4f3a770cd940afeb021148d8dec, type: 2}
-  animator: {fileID: 6798301024366010311}
-  damage: 30
-  shootDistance: 30
-  maxAmmoAmount: 30
-  clipSize: 30
-  fireRate: 360
-  reloadTime: 3
-  shootPoint: {fileID: 4407278967440105052}
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!95 &6798301024366010311
 Animator:
   serializedVersion: 5
@@ -112,6 +87,43 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &4407278967010278184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407278967010278190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d340296feb483d95d840391df67254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionOffset: {x: 0, y: 0.35, z: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
+  weaponInfo: {fileID: 11400000, guid: aadca4f3a770cd940afeb021148d8dec, type: 2}
+  damage: 30
+  shootDistance: 30
+  maxAmmoAmount: 30
+  clipSize: 30
+  fireRate: 360
+  reloadTime: 3
+  hitLayer:
+    serializedVersion: 2
+    m_Bits: 1
+--- !u!114 &6111622474303851279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407278967010278190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2572a9a5487e46ffbe64ff799ae33c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6798301024366010311}
 --- !u!1 &4407278967440105053
 GameObject:
   m_ObjectHideFlags: 0

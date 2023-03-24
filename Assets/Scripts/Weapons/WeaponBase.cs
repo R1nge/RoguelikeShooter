@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using Animators;
+using Player;
 using Scriptables;
 using UnityEngine;
 
@@ -8,12 +9,14 @@ namespace Weapons
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] private Vector3 positionOffset, rotationOffset;
+
         [SerializeField] protected WeaponInfo weaponInfo;
+
         //TODO: move animator to separate class
-        [SerializeField] protected Animator animator;
         protected bool CanPickup = true;
         protected Rigidbody Rigidbody;
         protected Collider Collider;
+        protected WeaponAnimatorControllerBase WeaponAnimatorControllerBase;
         protected PlayerWeaponController Owner;
 
         public WeaponInfo GetWeaponInfo() => weaponInfo;
@@ -23,19 +26,22 @@ namespace Weapons
         {
             Rigidbody = GetComponent<Rigidbody>();
             Collider = GetComponent<Collider>();
+            WeaponAnimatorControllerBase = GetComponent<WeaponAnimatorControllerBase>();
         }
 
         public virtual void AttackSingle()
         {
+            WeaponAnimatorControllerBase.AttackSingle();
         }
 
         public virtual void AttackHold()
         {
+            WeaponAnimatorControllerBase.AttackHold();
         }
 
         public virtual void StopAttack()
         {
-            
+            WeaponAnimatorControllerBase.StopAttack();
         }
 
         public virtual void Pickup(Transform parent, PlayerWeaponController owner)
