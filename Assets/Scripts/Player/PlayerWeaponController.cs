@@ -13,13 +13,11 @@ namespace Player
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private Camera playerCamera;
         [SerializeField] private InputActionAsset actions;
+        [SerializeField] private List<WeaponBase> weapons;
         private InputAction _weaponScroll;
-        private readonly List<WeaponBase> _weapons = new();
-        private int _currentWeaponIndex;
+        private int _currentWeaponIndex, _previousWeaponIndex;
 
         public Camera GetPlayerCamera() => playerCamera;
-
-        public List<WeaponBase> GetWeapons() => _weapons;
 
         private void OnEnable() => actions.Enable();
 
@@ -32,8 +30,9 @@ namespace Player
             actions.FindActionMap("Player").FindAction("PrimaryAttackHold").performed += PrimaryAttackHold;
             actions.FindActionMap("Player").FindAction("StopAttack").performed += StopAttack;
             actions.FindActionMap("Player").FindAction("Reload").performed += Reload;
-            actions.FindActionMap("Player").FindAction("Drop").performed += DropWeapon;
             _weaponScroll = actions.FindActionMap("Player").FindAction("WeaponScroll");
+            SelectWeapon(0);
+            weapons[_currentWeaponIndex].SetOwner(this);
         }
 
         private void OnDestroy()
@@ -43,27 +42,11 @@ namespace Player
             actions.FindActionMap("Player").FindAction("PrimaryAttackHold").performed -= PrimaryAttackHold;
             actions.FindActionMap("Player").FindAction("StopAttack").performed -= StopAttack;
             actions.FindActionMap("Player").FindAction("Reload").performed -= Reload;
-            actions.FindActionMap("Player").FindAction("Drop").performed -= DropWeapon;
         }
 
         private void Interact(InputAction.CallbackContext context)
         {
             Raycast();
-        }
-
-        public void SelectLastWeapon()
-        {
-            _currentWeaponIndex = _weapons.Count;
-            if (_currentWeaponIndex - 1 < 0)
-            {
-                _currentWeaponIndex = 0;
-            }
-            else
-            {
-                _currentWeaponIndex = _weapons.Count - 1;
-            }
-
-            SelectWeapon(_currentWeaponIndex);
         }
 
         private void Update()
@@ -73,19 +56,19 @@ namespace Player
 
         private void WeaponScroll()
         {
-            if (_weapons.Count >= 1)
+            if (weapons.Count >= 1)
             {
                 var scroll = _weaponScroll.ReadValue<float>();
                 if (scroll > 0)
                 {
-                    SelectWeapon((_currentWeaponIndex + 1) % _weapons.Count);
+                    SelectWeapon((_currentWeaponIndex + 1) % weapons.Count);
                 }
                 else if (scroll < 0)
                 {
-                    var index = (_currentWeaponIndex - 1) % _weapons.Count;
+                    var index = (_currentWeaponIndex - 1) % weapons.Count;
                     if (index < 0)
                     {
-                        index = _weapons.Count - 1;
+                        index = weapons.Count - 1;
                     }
 
                     SelectWeapon(index);
@@ -107,63 +90,83 @@ namespace Player
 
         private void PickupWeapon(WeaponBase weapon)
         {
+            if (weapons.Count == 3)
+            {
+                SwapWeapon(weapon);
+            }
+            else
+            {
+                weapon.Pickup(weaponHolder, this);
+                AddWeapon(weapon);
+            }
+        }
+
+        private void SwapWeapon(WeaponBase weapon)
+        {
+            if (_currentWeaponIndex != 0)
+            {
+                weapons[_currentWeaponIndex].Drop();
+                weapons[_currentWeaponIndex] = weapon;
+                SelectWeapon(_currentWeaponIndex);
+            }
+            else
+            {
+                weapons[_previousWeaponIndex].Drop();
+                weapons[_previousWeaponIndex] = weapon;
+                SelectWeapon(_previousWeaponIndex);
+            }
+            
             weapon.Pickup(weaponHolder, this);
-            AddWeapon(weapon);
         }
 
         private void PrimaryAttackSingle(InputAction.CallbackContext context)
         {
             if (!HasWeapon()) return;
-            _weapons[_currentWeaponIndex].AttackSingle();
+            weapons[_currentWeaponIndex].AttackSingle();
         }
 
         private void PrimaryAttackHold(InputAction.CallbackContext context)
         {
             if (!HasWeapon()) return;
-            _weapons[_currentWeaponIndex].AttackHold();
+            weapons[_currentWeaponIndex].AttackHold();
         }
 
-        private void StopAttack(InputAction.CallbackContext obj)
+        private void StopAttack(InputAction.CallbackContext context)
         {
             if (!HasWeapon()) return;
-            _weapons[_currentWeaponIndex].StopAttack();
+            weapons[_currentWeaponIndex].StopAttack();
         }
 
         private void Reload(InputAction.CallbackContext context)
         {
             if (!HasWeapon()) return;
-            var weapon = (ShootingWeaponBase)_weapons[_currentWeaponIndex];
+            var weapon = (ShootingWeaponBase)weapons[_currentWeaponIndex];
             weapon.Reload();
         }
 
         private void AddWeapon(WeaponBase weapon)
         {
-            _weapons.Add(weapon);
-            SelectWeapon(_weapons.Count - 1);
-        }
-
-        private void DropWeapon(InputAction.CallbackContext context)
-        {
-            if (!HasWeapon()) return;
-            _weapons[_currentWeaponIndex].Drop();
+            weapons.Add(weapon);
+            SelectWeapon(weapons.Count - 1);
         }
 
         private void SelectWeapon(int index)
         {
-            if (_weapons.Count <= 0) return;
-            if (_weapons[_currentWeaponIndex] != null)
+            if (weapons.Count <= 0) return;
+            if (weapons[_currentWeaponIndex] != null)
             {
-                _weapons[_currentWeaponIndex].gameObject.SetActive(false);
+                weapons[_currentWeaponIndex].gameObject.SetActive(false);
             }
-
+            
+            _previousWeaponIndex = _currentWeaponIndex;
             _currentWeaponIndex = index;
-            _weapons[_currentWeaponIndex].gameObject.SetActive(true);
+            weapons[_currentWeaponIndex].gameObject.SetActive(true);
         }
 
         private bool HasWeapon()
         {
-            if (_weapons.Count <= 0) return false;
-            if (_weapons[_currentWeaponIndex] == null) return false;
+            if (weapons.Count <= 0) return false;
+            if (weapons[_currentWeaponIndex] == null) return false;
             return true;
         }
     }

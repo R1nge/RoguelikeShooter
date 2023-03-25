@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Animators;
 using Damageable;
+using Player;
 using UnityEngine;
 
 namespace Weapons.ShootingWeapons

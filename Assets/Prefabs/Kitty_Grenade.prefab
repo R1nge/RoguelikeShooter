@@ -83,7 +83,7 @@ MonoBehaviour:
   weaponInfo: {fileID: 11400000, guid: 041b54ec6e9bfc548899e245710e18b7, type: 2}
   throwForce: 10
   damage: 10
-  damageRadius: 50
+  damageRadius: 5
   timeBeforeExplosion: 3
   layerMask:
     serializedVersion: 2
@@ -141,7 +141,7 @@ MonoBehaviour:
     m_ImpactRadius: 100
     m_DirectionMode: 0
     m_DissipationMode: 2
-    m_DissipationDistance: 10
+    m_DissipationDistance: 5
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: -0.33, y: -1, z: 0.33}
 --- !u!1 &5901411984095593670

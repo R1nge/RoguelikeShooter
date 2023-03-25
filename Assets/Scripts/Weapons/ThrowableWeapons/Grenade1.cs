@@ -29,7 +29,20 @@ namespace Weapons.ThrowableWeapons
 
         private void Throw()
         {
-            Rigidbody.AddForce(transform.forward * throwForce, ForceMode.Impulse);
+            Rigidbody.AddForce(CalculateVelocity(throwForce, transform.forward, 45f), ForceMode.Impulse);
+        }
+
+        private Vector3 CalculateVelocity(float speed, Vector3 direction, float degreeAngle)
+        {
+            //Raycast as distance
+            //float radians = (rayLength / maxDistance) * 0.01745329252f;
+            float radians = degreeAngle * 0.01745329252f;
+            
+            float yDirection = Mathf.Tan(radians);
+
+            Vector3 finalDirection = new Vector3(direction.x, yDirection, direction.z);
+
+            return speed * finalDirection.normalized;
         }
 
         private void Explode()
@@ -48,7 +61,8 @@ namespace Weapons.ThrowableWeapons
             for (int i = 0; i < hits; i++)
             {
                 var hitTransform = _hits[i].transform;
-                if (Physics.Raycast(transform.position, hitTransform.position - transform.position, out var hit, damageRadius))
+                if (Physics.Raycast(transform.position, hitTransform.position - transform.position, out var hit,
+                        damageRadius))
                 {
                     if (hit.transform.TryGetComponent(out IDamageable damageable))
                     {

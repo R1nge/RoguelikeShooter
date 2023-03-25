@@ -18,6 +18,7 @@ namespace Weapons
 
         public WeaponInfo GetWeaponInfo() => weaponInfo;
         public bool CanPickupWeapon() => CanPickup;
+        public void SetOwner(PlayerWeaponController owner) => Owner = owner;
 
         protected virtual void Awake()
         {
@@ -48,12 +49,13 @@ namespace Weapons
             transform.parent = parent;
             Rigidbody.isKinematic = true;
             Collider.isTrigger = true;
-            Owner = owner;
+            SetOwner(owner);
             transform.SetLocalPositionAndRotation(positionOffset, Quaternion.Euler(rotationOffset));
         }
 
         public virtual void Drop()
         {
+            gameObject.SetActive(true);
             CanPickup = true;
             transform.parent = null;
             Rigidbody.isKinematic = false;
@@ -63,9 +65,7 @@ namespace Weapons
 
         protected void RemoveFromInventory()
         {
-            Owner.GetWeapons().Remove(this);
-            Owner.SelectLastWeapon();
-            Owner = null;
+            SetOwner(null);
         }
     }
 }
