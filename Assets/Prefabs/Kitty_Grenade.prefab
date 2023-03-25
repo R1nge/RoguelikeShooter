@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3072565873167315072}
   - component: {fileID: 3072565873167315075}
   - component: {fileID: 3072565873167315073}
-  - component: {fileID: 623933941393071709}
   - component: {fileID: 7711373077514242363}
   m_Layer: 0
   m_Name: Kitty_Grenade
@@ -66,31 +65,6 @@ CapsuleCollider:
   m_Height: 0.54
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &623933941393071709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2443241063617423930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8fa673a33c5432e86ded6b66ab14437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0.35, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  weaponInfo: {fileID: 11400000, guid: 041b54ec6e9bfc548899e245710e18b7, type: 2}
-  throwForce: 10
-  damage: 10
-  damageRadius: 5
-  timeBeforeExplosion: 3
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 129
-  impulse: {fileID: 7711373077514242363}
-  explosionSound: {fileID: 6945249451151398799, guid: f9355b2dae005a84ebbd5dad05994d6a, type: 3}
-  explosionVfx: {fileID: 7634388131057834423, guid: 2b4c102e45482ff48aa8d438df538f90, type: 3}
 --- !u!114 &7711373077514242363
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -45,6 +45,7 @@ namespace Weapons
         public virtual void Pickup(Transform parent, PlayerWeaponController owner)
         {
             if (!CanPickup) return;
+            gameObject.SetActive(true);
             CanPickup = false;
             transform.parent = parent;
             Rigidbody.isKinematic = true;

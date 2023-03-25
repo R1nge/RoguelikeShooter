@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Weapons;
 using Weapons.ShootingWeapons;
 
 namespace Player
@@ -13,10 +13,11 @@ namespace Player
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private Camera playerCamera;
         [SerializeField] private InputActionAsset actions;
-        [SerializeField] private List<WeaponBase> weapons;
+        [SerializeField] private List<ShootingWeaponBase> weapons;
         private InputAction _weaponScroll;
         private InputAction _primaryAttackHold;
         private int _currentWeaponIndex, _previousWeaponIndex;
+        private AmmoUI _ammoUI;
 
         public Camera GetPlayerCamera() => playerCamera;
 
@@ -26,6 +27,7 @@ namespace Player
 
         private void Awake()
         {
+            _ammoUI = GetComponent<AmmoUI>();
             actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
             actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed += PrimaryAttackSingle;
             _primaryAttackHold = actions.FindActionMap("Player").FindAction("PrimaryAttackHold");
@@ -86,15 +88,17 @@ namespace Player
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             if (Physics.Raycast(ray, out var hit, rayDistance, layerMask))
             {
-                if (hit.transform.TryGetComponent(out WeaponBase weapon))
+                if (hit.transform.TryGetComponent(out ShootingWeaponBase weapon))
                 {
                     PickupWeapon(weapon);
                 }
             }
         }
 
-        private void PickupWeapon(WeaponBase weapon)
+        private void PickupWeapon(ShootingWeaponBase weapon)
         {
+            weapon.AmmoAmountChangedEvent += UpdateAmmoUI;
+            
             if (weapons.Count == 3)
             {
                 SwapWeapon(weapon);
@@ -106,7 +110,7 @@ namespace Player
             }
         }
 
-        private void SwapWeapon(WeaponBase weapon)
+        private void SwapWeapon(ShootingWeaponBase weapon)
         {
             if (_currentWeaponIndex != 0)
             {
@@ -139,11 +143,10 @@ namespace Player
         private void Reload(InputAction.CallbackContext context)
         {
             if (!HasWeapon()) return;
-            var weapon = (ShootingWeaponBase)weapons[_currentWeaponIndex];
-            weapon.Reload();
+            weapons[_currentWeaponIndex].Reload();
         }
 
-        private void AddWeapon(WeaponBase weapon)
+        private void AddWeapon(ShootingWeaponBase weapon)
         {
             weapons.Add(weapon);
             SelectWeapon(weapons.Count - 1);
@@ -152,14 +155,23 @@ namespace Player
         private void SelectWeapon(int index)
         {
             if (weapons.Count <= 0) return;
-            if (weapons[_currentWeaponIndex] != null)
+            var previous = weapons[_currentWeaponIndex];
+            if (previous != null)
             {
-                weapons[_currentWeaponIndex].gameObject.SetActive(false);
+                previous.AmmoAmountChangedEvent -= UpdateAmmoUI;
+                previous.gameObject.SetActive(false);
             }
 
             _previousWeaponIndex = _currentWeaponIndex;
             _currentWeaponIndex = index;
-            weapons[_currentWeaponIndex].gameObject.SetActive(true);
+            var current = weapons[_currentWeaponIndex];
+            current.AmmoAmountChangedEvent += UpdateAmmoUI;
+            current.gameObject.SetActive(true);
+        }
+
+        private void UpdateAmmoUI(int ammo, int maxAmmo, bool isInfinite)
+        {
+            _ammoUI.UpdateUI(ammo, maxAmmo, isInfinite);
         }
 
         private bool HasWeapon()

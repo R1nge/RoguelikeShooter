@@ -1603,6 +1603,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3072565873167315074, guid: 89f1173d7d313824cae7bae01f62ef7f, type: 3}
+    - {fileID: 623933941393071709, guid: 89f1173d7d313824cae7bae01f62ef7f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 89f1173d7d313824cae7bae01f62ef7f, type: 3}
 --- !u!1001 &2517283953010926935
 PrefabInstance:
@@ -1833,7 +1834,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3662962079908729751, guid: cafe8586ab3d27d438d5c4c980cc28c1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cafe8586ab3d27d438d5c4c980cc28c1, type: 3}
 --- !u!1001 &4201803860406381045
 PrefabInstance:
@@ -2020,5 +2022,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kunai
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3411065074005337177, guid: 34d34cab6f00e1d45925528c41048aa5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 34d34cab6f00e1d45925528c41048aa5, type: 3}

@@ -379,7 +379,6 @@ GameObject:
   - component: {fileID: 7756471023934707909}
   - component: {fileID: 7756471023934707912}
   - component: {fileID: 7756471023934707913}
-  - component: {fileID: 3411065074005337177}
   m_Layer: 6
   m_Name: Kunai
   m_TagString: Untagged
@@ -432,23 +431,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.23272252, y: 0.21447581, z: 1.2389246}
   m_Center: {x: -0.1847049, y: 0.062358707, z: -0.616841}
---- !u!114 &3411065074005337177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7756471023934707916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84ced19f9e564b229010f98175f9633a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 180, z: 0}
-  weaponInfo: {fileID: 11400000, guid: de9ed99539d70014d92b3cd01d8abfcb, type: 2}
-  throwForce: 50
-  damage: 50
 --- !u!1 &8290338939768179094
 GameObject:
   m_ObjectHideFlags: 0

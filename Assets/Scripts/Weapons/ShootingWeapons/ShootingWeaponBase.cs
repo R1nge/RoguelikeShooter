@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Animators;
 using Damageable;
+using Player;
 using UnityEngine;
 
 namespace Weapons.ShootingWeapons
@@ -9,31 +11,56 @@ namespace Weapons.ShootingWeapons
     {
         [SerializeField] protected int damage;
         [SerializeField] protected float shootDistance;
-        [SerializeField] protected int maxAmmoAmount, clipSize;
+        [SerializeField] protected int clipSize;
 
-        [Tooltip("Fire rate per minute")] [SerializeField]
+        [Tooltip("Fire rate per minute"), SerializeField]
         protected float fireRate;
 
         [SerializeField] protected float reloadTime;
         [SerializeField] protected LayerMask hitLayer;
+        [SerializeField] protected bool isInfinite;
         private bool _canShoot = true;
         private int _currentAmmoAmount;
+        [SerializeField, HideInInspector] private int _maxAmmoAmount;
         private float _nextFire;
         private ShootingWeaponAnimatorControllerBase _shootingWeaponAnimatorControllerBase;
         private int _totalAmmo;
         private Coroutine _reloadCoroutine;
 
+        private int CurrentAmmoAmount
+        {
+            get => _currentAmmoAmount;
+            set
+            {
+                _currentAmmoAmount = value;
+                AmmoAmountChangedEvent?.Invoke(_currentAmmoAmount, _totalAmmo, isInfinite);
+            }
+        }
+
+        public event Action<int, int, bool> AmmoAmountChangedEvent;
+
+        public bool IsInfinite() => isInfinite;
+
+        public int GetMaxAmmoAmount() => _maxAmmoAmount;
+
+        public void SetMaxAmmoAmount(int value) => _maxAmmoAmount = value;
+
         protected override void Awake()
         {
             base.Awake();
             _shootingWeaponAnimatorControllerBase = GetComponent<ShootingWeaponAnimatorControllerBase>();
-            _currentAmmoAmount = clipSize;
-            _totalAmmo = maxAmmoAmount;
+            CurrentAmmoAmount = clipSize;
+            _totalAmmo = _maxAmmoAmount;
+        }
+
+        private void Start()
+        {
+            AmmoAmountChangedEvent?.Invoke(_currentAmmoAmount, _totalAmmo, isInfinite);
         }
 
         public override void AttackHold()
         {
-            if (_currentAmmoAmount <= 0)
+            if (CurrentAmmoAmount <= 0)
             {
                 Reload();
                 _shootingWeaponAnimatorControllerBase.StopAttack();
@@ -44,16 +71,20 @@ namespace Weapons.ShootingWeapons
                 if (_canShoot)
                 {
                     Shoot();
-                    print("SHOOOOOT");
                 }
             }
         }
 
         public void Reload()
         {
-            if (_reloadCoroutine != null) return;
-            if (_totalAmmo == 0) return;
-            if (_currentAmmoAmount == clipSize) return;
+            if (CurrentAmmoAmount == clipSize) return;
+
+            if (!isInfinite)
+            {
+                if (_totalAmmo == 0) return;
+                if (_reloadCoroutine != null) return;
+            }
+
             _reloadCoroutine = StartCoroutine(Reload_c());
         }
 
@@ -64,16 +95,23 @@ namespace Weapons.ShootingWeapons
             yield return new WaitForSeconds(reloadTime);
             _shootingWeaponAnimatorControllerBase.StopReload();
 
-            int ammoToReload = clipSize - _currentAmmoAmount;
-            if (ammoToReload < _totalAmmo)
+            if (isInfinite)
             {
-                _totalAmmo -= ammoToReload;
-                _currentAmmoAmount += ammoToReload;
+                CurrentAmmoAmount = clipSize;
             }
             else
             {
-                _currentAmmoAmount += _totalAmmo;
-                _totalAmmo = 0;
+                int ammoToReload = clipSize - CurrentAmmoAmount;
+                if (ammoToReload < _totalAmmo)
+                {
+                    _totalAmmo -= ammoToReload;
+                    CurrentAmmoAmount += ammoToReload;
+                }
+                else
+                {
+                    CurrentAmmoAmount += _totalAmmo;
+                    _totalAmmo = 0;
+                }
             }
 
             _canShoot = true;
@@ -87,7 +125,7 @@ namespace Weapons.ShootingWeapons
                 _nextFire = Time.time + 1 / (fireRate / 60);
                 Raycast();
                 _shootingWeaponAnimatorControllerBase.AttackHold();
-                _currentAmmoAmount--;
+                CurrentAmmoAmount--;
             }
         }
 
@@ -104,9 +142,15 @@ namespace Weapons.ShootingWeapons
             }
         }
 
+        public override void Pickup(Transform parent, PlayerWeaponController owner)
+        {
+            base.Pickup(parent, owner);
+            AmmoAmountChangedEvent?.Invoke(_currentAmmoAmount, _totalAmmo, isInfinite);
+        }
+
         private void OnEnable()
         {
-            if (_currentAmmoAmount <= 0)
+            if (CurrentAmmoAmount <= 0)
             {
                 _reloadCoroutine = StartCoroutine(Reload_c());
             }
@@ -114,6 +158,8 @@ namespace Weapons.ShootingWeapons
             {
                 _canShoot = true;
             }
+            
+            AmmoAmountChangedEvent?.Invoke(_currentAmmoAmount, _totalAmmo, isInfinite);
         }
 
         private void OnDisable()

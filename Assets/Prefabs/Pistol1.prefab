@@ -232,6 +232,7 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 1
+  isInfinite: 0
 --- !u!114 &2517283954265630359
 MonoBehaviour:
   m_ObjectHideFlags: 0

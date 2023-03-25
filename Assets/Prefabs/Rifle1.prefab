@@ -104,13 +104,14 @@ MonoBehaviour:
   weaponInfo: {fileID: 11400000, guid: aadca4f3a770cd940afeb021148d8dec, type: 2}
   damage: 30
   shootDistance: 30
-  maxAmmoAmount: 30
   clipSize: 30
   fireRate: 360
   reloadTime: 3
   hitLayer:
     serializedVersion: 2
     m_Bits: 1
+  isInfinite: 0
+  _maxAmmoAmount: 0
 --- !u!114 &6111622474303851279
 MonoBehaviour:
   m_ObjectHideFlags: 0
