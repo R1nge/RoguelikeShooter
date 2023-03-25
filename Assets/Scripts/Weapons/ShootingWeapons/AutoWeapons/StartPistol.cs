@@ -2,6 +2,6 @@
 {
     public class StartPistol : ShootingWeaponBase
     {
-        //TODO: infinite ammo
+        //TODO: set max ammo infinite
     }
 }

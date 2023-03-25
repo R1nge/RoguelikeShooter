@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Animators;
 using Damageable;
-using Player;
 using UnityEngine;
 
 namespace Weapons.ShootingWeapons
@@ -17,30 +16,35 @@ namespace Weapons.ShootingWeapons
 
         [SerializeField] protected float reloadTime;
         [SerializeField] protected LayerMask hitLayer;
-        protected bool CanShoot = true;
-        protected int CurrentAmmoAmount;
-        protected ShootingWeaponAnimatorControllerBase ShootingWeaponAnimatorControllerBase;
-        private Coroutine _reloadCoroutine;
+        private bool _canShoot = true;
+        private int _currentAmmoAmount;
         private float _nextFire;
+        private ShootingWeaponAnimatorControllerBase _shootingWeaponAnimatorControllerBase;
+        private int _totalAmmo;
+        private Coroutine _reloadCoroutine;
 
         protected override void Awake()
         {
             base.Awake();
-            ShootingWeaponAnimatorControllerBase = GetComponent<ShootingWeaponAnimatorControllerBase>();
-            CurrentAmmoAmount = clipSize;
+            _shootingWeaponAnimatorControllerBase = GetComponent<ShootingWeaponAnimatorControllerBase>();
+            _currentAmmoAmount = clipSize;
+            _totalAmmo = maxAmmoAmount;
         }
 
         public override void AttackHold()
         {
-            if (CurrentAmmoAmount <= 0)
+            if (_currentAmmoAmount <= 0)
             {
                 Reload();
+                _shootingWeaponAnimatorControllerBase.StopAttack();
+                _canShoot = false;
             }
             else
             {
-                if (CanShoot)
+                if (_canShoot)
                 {
                     Shoot();
+                    print("SHOOOOOT");
                 }
             }
         }
@@ -48,17 +52,31 @@ namespace Weapons.ShootingWeapons
         public void Reload()
         {
             if (_reloadCoroutine != null) return;
+            if (_totalAmmo == 0) return;
+            if (_currentAmmoAmount == clipSize) return;
             _reloadCoroutine = StartCoroutine(Reload_c());
         }
 
         private IEnumerator Reload_c()
         {
-            CanShoot = false;
-            ShootingWeaponAnimatorControllerBase.Reload();
+            _canShoot = false;
+            _shootingWeaponAnimatorControllerBase.Reload();
             yield return new WaitForSeconds(reloadTime);
-            ShootingWeaponAnimatorControllerBase.StopReload();
-            CurrentAmmoAmount = clipSize;
-            CanShoot = true;
+            _shootingWeaponAnimatorControllerBase.StopReload();
+
+            int ammoToReload = clipSize - _currentAmmoAmount;
+            if (ammoToReload < _totalAmmo)
+            {
+                _totalAmmo -= ammoToReload;
+                _currentAmmoAmount += ammoToReload;
+            }
+            else
+            {
+                _currentAmmoAmount += _totalAmmo;
+                _totalAmmo = 0;
+            }
+
+            _canShoot = true;
             _reloadCoroutine = null;
         }
 
@@ -68,8 +86,8 @@ namespace Weapons.ShootingWeapons
             {
                 _nextFire = Time.time + 1 / (fireRate / 60);
                 Raycast();
-                ShootingWeaponAnimatorControllerBase.AttackHold();
-                CurrentAmmoAmount--;
+                _shootingWeaponAnimatorControllerBase.AttackHold();
+                _currentAmmoAmount--;
             }
         }
 
@@ -88,13 +106,13 @@ namespace Weapons.ShootingWeapons
 
         private void OnEnable()
         {
-            if (CurrentAmmoAmount <= 0)
+            if (_currentAmmoAmount <= 0)
             {
                 _reloadCoroutine = StartCoroutine(Reload_c());
             }
             else
             {
-                CanShoot = true;
+                _canShoot = true;
             }
         }
 

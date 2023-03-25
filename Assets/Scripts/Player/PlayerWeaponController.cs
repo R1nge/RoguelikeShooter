@@ -15,6 +15,7 @@ namespace Player
         [SerializeField] private InputActionAsset actions;
         [SerializeField] private List<WeaponBase> weapons;
         private InputAction _weaponScroll;
+        private InputAction _primaryAttackHold;
         private int _currentWeaponIndex, _previousWeaponIndex;
 
         public Camera GetPlayerCamera() => playerCamera;
@@ -27,7 +28,7 @@ namespace Player
         {
             actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
             actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed += PrimaryAttackSingle;
-            actions.FindActionMap("Player").FindAction("PrimaryAttackHold").performed += PrimaryAttackHold;
+            _primaryAttackHold = actions.FindActionMap("Player").FindAction("PrimaryAttackHold");
             actions.FindActionMap("Player").FindAction("StopAttack").performed += StopAttack;
             actions.FindActionMap("Player").FindAction("Reload").performed += Reload;
             _weaponScroll = actions.FindActionMap("Player").FindAction("WeaponScroll");
@@ -39,7 +40,6 @@ namespace Player
         {
             actions.FindActionMap("Player").FindAction("Interact").performed -= Interact;
             actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed -= PrimaryAttackSingle;
-            actions.FindActionMap("Player").FindAction("PrimaryAttackHold").performed -= PrimaryAttackHold;
             actions.FindActionMap("Player").FindAction("StopAttack").performed -= StopAttack;
             actions.FindActionMap("Player").FindAction("Reload").performed -= Reload;
         }
@@ -52,6 +52,11 @@ namespace Player
         private void Update()
         {
             WeaponScroll();
+
+            if (_primaryAttackHold.IsPressed())
+            {
+                weapons[_currentWeaponIndex].AttackHold();
+            }
         }
 
         private void WeaponScroll()
@@ -115,7 +120,7 @@ namespace Player
                 weapons[_previousWeaponIndex] = weapon;
                 SelectWeapon(_previousWeaponIndex);
             }
-            
+
             weapon.Pickup(weaponHolder, this);
         }
 
@@ -123,12 +128,6 @@ namespace Player
         {
             if (!HasWeapon()) return;
             weapons[_currentWeaponIndex].AttackSingle();
-        }
-
-        private void PrimaryAttackHold(InputAction.CallbackContext context)
-        {
-            if (!HasWeapon()) return;
-            weapons[_currentWeaponIndex].AttackHold();
         }
 
         private void StopAttack(InputAction.CallbackContext context)
@@ -157,7 +156,7 @@ namespace Player
             {
                 weapons[_currentWeaponIndex].gameObject.SetActive(false);
             }
-            
+
             _previousWeaponIndex = _currentWeaponIndex;
             _currentWeaponIndex = index;
             weapons[_currentWeaponIndex].gameObject.SetActive(true);
