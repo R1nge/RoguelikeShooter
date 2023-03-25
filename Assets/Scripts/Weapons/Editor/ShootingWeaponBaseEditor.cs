@@ -7,16 +7,24 @@ namespace Weapons.Editor
     [CanEditMultipleObjects]
     public class ShootingWeaponBaseEditor : UnityEditor.Editor
     {
+        private static SerializedProperty _maxAmmo;
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
             ShootingWeaponBase weapon = (ShootingWeaponBase)target;
+            
+            serializedObject.Update();
+
+            _maxAmmo = serializedObject.FindProperty("_maxAmmoAmount");
 
             if (!weapon.IsInfinite())
             {
-                var amount = EditorGUILayout.IntField("Max ammo amount: ", weapon.GetMaxAmmoAmount());
-                weapon.SetMaxAmmoAmount(amount);
+                _maxAmmo.intValue = EditorGUILayout.IntField("Max ammo amount: ", _maxAmmo.intValue);
+                weapon.SetMaxAmmoAmount(_maxAmmo.intValue);
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
