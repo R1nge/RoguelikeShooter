@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Abilities;
+using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,22 +8,34 @@ namespace Player
 {
     public class AbilitiesController : MonoBehaviour
     {
+        [SerializeField, Tooltip("Per second")]
+        private float manaRestoreRate;
+
         [SerializeField] private int maxManaAmount;
         [SerializeField] private InputActionAsset actions;
         private int _currentManaAmount;
         private AbilityBase _currentAbility;
         private IEnumerator _abilityCoroutine;
+        private IEnumerator _manaRestore;
+        private ManaUI _manaUI;
 
         private void Awake()
         {
+            _manaUI = GetComponent<ManaUI>();
             _currentManaAmount = maxManaAmount;
+        }
+
+        private void Start()
+        {
+            _manaUI.UpdateUI(_currentManaAmount);
+            StartCoroutine(RestoreMana());
         }
 
         private void Update()
         {
             if (actions.FindActionMap("Player").FindAction("SpecialAbility").WasPressedThisFrame())
             {
-                StartCoroutine(UseAbility());
+                StartCoroutine(UseAbility_c());
             }
         }
 
@@ -32,7 +44,7 @@ namespace Player
             _currentAbility = ability;
         }
 
-        private IEnumerator UseAbility()
+        private IEnumerator UseAbility_c()
         {
             if (_currentAbility == null)
             {
@@ -52,12 +64,31 @@ namespace Player
                 print($"{_currentAbility}");
                 _currentManaAmount -= manaCost;
                 _abilityCoroutine = _currentAbility?.Execute();
+                _manaUI.UpdateUI(_currentManaAmount);
                 yield return StartCoroutine(_abilityCoroutine);
                 _abilityCoroutine = null;
             }
             else
             {
                 print("Not enough mana");
+            }
+        }
+        
+        //TODO: use update()???
+        private IEnumerator RestoreMana()
+        {
+            while (enabled)
+            {
+                if (_currentManaAmount >= maxManaAmount)
+                {
+                    yield return new WaitForSeconds(1 / manaRestoreRate);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1 / manaRestoreRate);
+                    _currentManaAmount += 1;
+                    _manaUI.UpdateUI(_currentManaAmount);
+                }
             }
         }
     }
