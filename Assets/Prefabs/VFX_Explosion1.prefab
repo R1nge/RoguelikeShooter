@@ -23872,7 +23872,7 @@ GameObject:
   - component: {fileID: 7634388131058189719}
   - component: {fileID: 7634388131038789847}
   - component: {fileID: 7634388131038837111}
-  - component: {fileID: 3916920121210328402}
+  - component: {fileID: 359331549302858258}
   m_Layer: 0
   m_Name: VFX_Explosion1
   m_TagString: Untagged
@@ -28615,7 +28615,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &3916920121210328402
+--- !u!114 &359331549302858258
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -28624,10 +28624,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7634388131057834423}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eff608fabc24c4597353e4762348a74, type: 3}
+  m_Script: {fileID: 11500000, guid: 7dfd524b7cc31b7418255463688aa360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 2.5
+  delay: 2
 --- !u!1 &7634388131057834425
 GameObject:
   m_ObjectHideFlags: 0

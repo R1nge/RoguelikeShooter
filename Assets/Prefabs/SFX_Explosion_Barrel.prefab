@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4062567243953472071}
   - component: {fileID: 6945249451151398799}
-  - component: {fileID: -7984871705211893452}
+  - component: {fileID: 7445523118664365557}
   m_Layer: 0
   m_Name: SFX_Explosion_Barrel
   m_TagString: Untagged
@@ -129,7 +129,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-7984871705211893452
+--- !u!114 &7445523118664365557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8888432109710489010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eff608fabc24c4597353e4762348a74, type: 3}
+  m_Script: {fileID: 11500000, guid: 7dfd524b7cc31b7418255463688aa360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 1.5
+  delay: 2.5
