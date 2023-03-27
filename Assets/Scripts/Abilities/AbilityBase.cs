@@ -13,6 +13,6 @@ namespace Abilities
 
         public abstract IEnumerator Execute();
 
-        public int GetAbilityCost() => _abilityData.manaCost;
+        public AbilityData GetAbilityData() => _abilityData;
     }
 }

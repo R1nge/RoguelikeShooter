@@ -26,7 +26,7 @@ namespace Abilities
         public override IEnumerator Execute()
         {
             Damage();
-            yield return new WaitForSeconds(_abilityData.coolDown);
+            yield return new WaitForSeconds(_abilityData.GetCoolDown());
         }
 
         private void Damage()

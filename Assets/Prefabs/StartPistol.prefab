@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 2517283954265630358}
   - component: {fileID: 2517283954265630359}
   m_Layer: 0
-  m_Name: Pistol1
+  m_Name: StartPistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,7 +171,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -208,6 +208,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &2517283954265630358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,14 +226,14 @@ MonoBehaviour:
   weaponInfo: {fileID: 11400000, guid: 45fd0629d75800e408ccce87417352e0, type: 2}
   damage: 30
   shootDistance: 30
-  maxAmmoAmount: 30
   clipSize: 30
   fireRate: 240
   reloadTime: 1
   hitLayer:
     serializedVersion: 2
     m_Bits: 1
-  isInfinite: 0
+  isInfinite: 1
+  _maxAmmoAmount: 0
 --- !u!114 &2517283954265630359
 MonoBehaviour:
   m_ObjectHideFlags: 0

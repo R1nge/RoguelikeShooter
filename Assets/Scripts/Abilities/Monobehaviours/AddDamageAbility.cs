@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AddDamageAbility : AddAbilityBase
 {
-    [SerializeField] private float damageDistance;
+    [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private int damage;
 
@@ -13,8 +13,7 @@ public class AddDamageAbility : AddAbilityBase
         if (other.TryGetComponent(out AbilitiesController abilitiesController))
         {
             var camera = abilitiesController.GetComponentInChildren<Camera>();
-            //SO for ability image 
-            abilitiesController.SetAbility(new DamageAbility(abilityData, camera, damageDistance, layerMask, damage));
+            abilitiesController.SetAbility(new DamageAbility(abilityData, camera, rayDistance, layerMask, damage));
             Destroy(gameObject);
         }
     }

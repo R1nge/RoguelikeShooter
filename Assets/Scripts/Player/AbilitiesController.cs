@@ -18,10 +18,19 @@ namespace Player
         private IEnumerator _abilityCoroutine;
         private IEnumerator _manaRestore;
         private ManaUI _manaUI;
+        private AbilityUI _abilityUI;
+
+        public void SetAbility(AbilityBase ability)
+        {
+            _currentAbility = ability;
+            _abilityUI.UpdateUI(ability.GetAbilityData());
+            _abilityUI.UpdateFill(ability.GetAbilityData(), ability.GetAbilityData().GetCoolDown());
+        }
 
         private void Awake()
         {
             _manaUI = GetComponent<ManaUI>();
+            _abilityUI = GetComponent<AbilityUI>();
             _currentManaAmount = maxManaAmount;
         }
 
@@ -39,11 +48,6 @@ namespace Player
             }
         }
 
-        public void SetAbility(AbilityBase ability)
-        {
-            _currentAbility = ability;
-        }
-
         private IEnumerator UseAbility_c()
         {
             if (_currentAbility == null)
@@ -58,13 +62,14 @@ namespace Player
                 yield break;
             }
 
-            var manaCost = _currentAbility.GetAbilityCost();
+            var manaCost = _currentAbility.GetAbilityData().GetManaCost();
             if (_currentManaAmount - manaCost >= 0)
             {
                 print($"{_currentAbility}");
                 _currentManaAmount -= manaCost;
                 _abilityCoroutine = _currentAbility?.Execute();
                 _manaUI.UpdateUI(_currentManaAmount);
+                _abilityUI.UpdateUI(_currentAbility?.GetAbilityData());
                 yield return StartCoroutine(_abilityCoroutine);
                 _abilityCoroutine = null;
             }
@@ -73,7 +78,7 @@ namespace Player
                 print("Not enough mana");
             }
         }
-        
+
         //TODO: use update()???
         private IEnumerator RestoreMana()
         {

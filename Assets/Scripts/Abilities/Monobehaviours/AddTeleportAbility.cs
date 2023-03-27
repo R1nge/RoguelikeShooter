@@ -1,11 +1,10 @@
-﻿using System;
-using Abilities;
+﻿using Abilities;
 using Player;
 using UnityEngine;
 
 public class AddTeleportAbility : AddAbilityBase
 {
-    [SerializeField] private float teleportDistance;
+    [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask layerMask;
 
     private void OnTriggerEnter(Collider other)
@@ -14,11 +13,13 @@ public class AddTeleportAbility : AddAbilityBase
         {
             if (player.TryGetComponent(out AbilitiesController abilitiesController))
             {
-                var camera = player.GetComponentInChildren<Camera>();
-                //SO for ability image 
-                abilitiesController.SetAbility(new TeleportAbility(abilityData, player.transform, camera, teleportDistance, layerMask));
-
-                Destroy(gameObject);
+                if (player.TryGetComponent(out CharacterController characterController))
+                {
+                    var camera = player.GetComponentInChildren<Camera>();
+                    abilitiesController.SetAbility(new TeleportAbility(abilityData, characterController, camera,
+                        rayDistance, layerMask));
+                    Destroy(gameObject);
+                }
             }
         }
     }
