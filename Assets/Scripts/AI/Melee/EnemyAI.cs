@@ -1,40 +1,69 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace AI
 {
     public class EnemyAI : MonoBehaviour
     {
-        private State[] _states;
-        private State _currentState;
+        [SerializeField] private Waypoint[] waypoints;
+        private Dictionary<Type, IState> _states;
+        private IState _currentState;
+        private NavMeshAgent _agent;
 
-        private void Awake() => _states = GetComponentsInChildren<State>();
-
-        private void Start() => SetState(_states[0]);
-
-        public void SetState(State newState)
+        private void Awake()
         {
-            if (_currentState != null)
-            {
-                _currentState.Exit();
-            }
+            Init();
+        }
 
+        private void Start()
+        {
+            _currentState = GetState<RoamingState>();
+        }
+
+        private void Init()
+        {
+            _agent = GetComponent<NavMeshAgent>();
+
+            _states = new Dictionary<Type, IState>
+            {
+                [typeof(RoamingState)] = new RoamingState(this, _agent, waypoints),
+                [typeof(StunState)] = new StunState(2f, this, _agent)
+            };
+        }
+
+        public void SetState(IState newState)
+        {
+            _currentState?.Exit();
             _currentState = newState;
-            _currentState.Enter();
+            _currentState?.Enter();
+        }
+
+        public IState GetState<T>() where T : IState
+        {
+            var type = typeof(T);
+            return _states[type];
         }
 
         private void Update()
         {
-            _currentState.MyUpdate();
+            _currentState?.Update();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            _currentState.MyOnTriggerEnter(other);
+            _currentState?.OnTriggerEnter(other);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            _currentState.MyOnTriggerExit(other);
+            _currentState?.OnTriggerExit(other);
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            _currentState?.OnTriggerStay(other);
         }
     }
 }

@@ -23,21 +23,18 @@ namespace Abilities
 
         public override IEnumerator Execute()
         {
-            Damage();
+            Stun();
             yield return new WaitForSeconds(_abilityData.GetCoolDown());
         }
 
-        private void Damage()
+        private void Stun()
         {
             Ray ray = new Ray(_playerCamera.transform.position, _playerCamera.transform.forward);
             if (Physics.Raycast(ray, out var hit, _rayDistance, _layerMask))
             {
                 if (hit.transform.TryGetComponent(out EnemyAI enemyAI))
                 {
-                    if (enemyAI.TryGetComponent(out StunState stunState))
-                    {
-                        enemyAI.SetState(stunState);
-                    }
+                    enemyAI.SetState(enemyAI.GetState<StunState>());
                 }
             }
         }

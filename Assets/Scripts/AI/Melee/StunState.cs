@@ -1,45 +1,51 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 namespace AI
 {
-    public class StunState : State
+    public class StunState : IState
     {
-        [SerializeField] private float duration;
-        private EnemyAI _enemyAI;
-        private NavMeshAgent _agent;
+        private readonly float _duration;
+        private readonly EnemyAI _enemyAI;
+        private readonly NavMeshAgent _agent;
+        private float _currentDuration;
 
-        private void Awake()
+        public StunState(float duration, EnemyAI enemyAI, NavMeshAgent agent)
         {
-            _enemyAI = GetComponent<EnemyAI>();
-            _agent = GetComponent<NavMeshAgent>();
+            _duration = duration;
+            _enemyAI = enemyAI;
+            _agent = agent;
         }
 
-        public override void MyUpdate()
+        public void Enter()
         {
+            _currentDuration = _duration;
+            _agent.isStopped = true;
         }
 
-        public override void Enter()
-        {
-            _agent.SetDestination(transform.position);
-            Invoke(nameof(ReturnState), duration);
-        }
-
-        private void ReturnState()
-        {
-            _enemyAI.SetState(GetComponent<RoamingState>());
-        }
-
-        public override void Exit()
+        public void Exit()
         {
         }
 
-        public override void MyOnTriggerEnter(Collider other)
+        public void Update()
+        {
+            _currentDuration -= Time.deltaTime;
+            if (_currentDuration <= 0)
+            {
+                _agent.isStopped = false;
+                _enemyAI.SetState(_enemyAI.GetState<RoamingState>());
+            }
+        }
+
+        public void OnTriggerEnter(Collider other)
         {
         }
 
-        public override void MyOnTriggerExit(Collider other)
+        public void OnTriggerExit(Collider other)
+        {
+        }
+
+        public void OnTriggerStay(Collider other)
         {
         }
     }

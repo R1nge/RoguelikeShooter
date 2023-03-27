@@ -4,52 +4,51 @@ using UnityEngine.AI;
 
 namespace AI
 {
-    public class ChaseState : State
+    public class ChaseState : IState
     {
-        private EnemyAI _enemyAI;
-        private NavMeshAgent _navMeshAgent;
+        private readonly EnemyAI _enemyAI;
+        private readonly NavMeshAgent _navMeshAgent;
         private Transform _target;
-        private RoamingState _roamingState;
 
-        private void Awake()
+        public ChaseState(EnemyAI enemyAI, NavMeshAgent navMeshAgent, Transform target)
         {
-            _enemyAI = GetComponent<EnemyAI>();
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-            _roamingState = GetComponent<RoamingState>();
-        }
-
-        public void SetTarget(Transform target)
-        {
+            _enemyAI = enemyAI;
+            _navMeshAgent = navMeshAgent;
             _target = target;
         }
 
-        public override void Enter()
-        {
-        }
-
-        public override void MyUpdate()
+        public void Enter()
         {
             _navMeshAgent.SetDestination(_target.position);
         }
 
-        public override void MyOnTriggerEnter(Collider other)
+        public void Exit()
+        {
+            _target = null;
+        }
+
+        public void Update()
+        {
+            _navMeshAgent.SetDestination(_target.position);
+        }
+
+        public void OnTriggerEnter(Collider other)
         {
         }
 
-        public override void MyOnTriggerExit(Collider other)
+        public void OnTriggerStay(Collider other)
+        {
+        }
+
+        public void OnTriggerExit(Collider other)
         {
             if (other.TryGetComponent(out PlayerCharacter player))
             {
                 if (_target == player.transform)
                 {
-                    _enemyAI.SetState(_roamingState);
+                    _enemyAI.SetState(_enemyAI.GetState<RoamingState>());
                 }
             }
-        }
-
-        public override void Exit()
-        {
-            _target = null;
         }
     }
 }

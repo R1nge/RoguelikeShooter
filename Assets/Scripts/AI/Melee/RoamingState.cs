@@ -4,36 +4,43 @@ using UnityEngine.AI;
 
 namespace AI
 {
-    public class RoamingState : State
+    public class RoamingState : IState
     {
-        [SerializeField] private Waypoint[] waypoints;
+        private Waypoint[] _waypoints;
         private int _currentWaypointIndex;
-        private EnemyAI _enemyAI;
-        private NavMeshAgent _navMeshAgent;
-        private ChaseState _chaseState;
+        private readonly EnemyAI _enemyAI;
+        private readonly NavMeshAgent _navMeshAgent;
+        private readonly Transform _transform;
 
-        private void Awake()
+        public RoamingState(EnemyAI enemyAI, NavMeshAgent agent, Waypoint[] waypoints)
         {
-            _enemyAI = GetComponent<EnemyAI>();
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-            _chaseState = GetComponent<ChaseState>();
+            _enemyAI = enemyAI;
+            _navMeshAgent = agent;
+            _transform = agent.transform;
+            _waypoints = waypoints;
         }
 
-        public override void Enter()
+
+        public void Enter()
         {
         }
 
-        public override void MyUpdate()
+        public void Exit()
+        {
+            
+        }
+
+        public void Update()
         {
             Roaming();
         }
 
         private void Roaming()
         {
-            var waypointPosition = waypoints[_currentWaypointIndex].transform.position;
-            if (Vector3.Distance(transform.position,waypointPosition) <= .1f)
+            var waypointPosition = _waypoints[_currentWaypointIndex].transform.position;
+            if (Vector3.Distance(_transform.position,waypointPosition) <= .1f)
             {
-                _currentWaypointIndex = (_currentWaypointIndex + 1) % waypoints.Length;
+                _currentWaypointIndex = (_currentWaypointIndex + 1) % _waypoints.Length;
             }
             else
             {
@@ -41,20 +48,23 @@ namespace AI
             }
         }
 
-        public override void MyOnTriggerEnter(Collider other)
+        public void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out PlayerCharacter player))
             {
-                _chaseState.SetTarget(player.transform);
-                _enemyAI.SetState(_chaseState);
+                _enemyAI.SetState(new ChaseState(_enemyAI, _navMeshAgent, player.transform));
             }
         }
 
-        public override void MyOnTriggerExit(Collider other)
+        public void OnTriggerStay(Collider other)
         {
+            if (other.TryGetComponent(out PlayerCharacter player))
+            {
+                _enemyAI.SetState(new ChaseState(_enemyAI, _navMeshAgent, player.transform));
+            }
         }
 
-        public override void Exit()
+        public void OnTriggerExit(Collider other)
         {
         }
     }
