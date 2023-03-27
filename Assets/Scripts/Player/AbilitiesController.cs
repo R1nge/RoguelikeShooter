@@ -17,6 +17,7 @@ namespace Player
         private AbilityBase _currentAbility;
         private IEnumerator _abilityCoroutine;
         private IEnumerator _manaRestore;
+        private static WaitForSeconds _manaWait;
         private ManaUI _manaUI;
         private AbilityUI _abilityUI;
 
@@ -32,6 +33,7 @@ namespace Player
             _manaUI = GetComponent<ManaUI>();
             _abilityUI = GetComponent<AbilityUI>();
             _currentManaAmount = maxManaAmount;
+            _manaWait = new WaitForSeconds(1 / manaRestoreRate);
         }
 
         private void Start()
@@ -47,7 +49,7 @@ namespace Player
                 StartCoroutine(UseAbility_c());
             }
         }
-
+        
         private IEnumerator UseAbility_c()
         {
             if (_currentAbility == null)
@@ -72,25 +74,25 @@ namespace Player
                 _abilityUI.UpdateUI(_currentAbility?.GetAbilityData());
                 yield return StartCoroutine(_abilityCoroutine);
                 _abilityCoroutine = null;
+                yield return null;
             }
             else
             {
                 print("Not enough mana");
             }
         }
-
-        //TODO: use update()???
+        
         private IEnumerator RestoreMana()
         {
             while (enabled)
             {
                 if (_currentManaAmount >= maxManaAmount)
                 {
-                    yield return new WaitForSeconds(1 / manaRestoreRate);
+                    yield return _manaWait;
                 }
                 else
                 {
-                    yield return new WaitForSeconds(1 / manaRestoreRate);
+                    yield return _manaWait;
                     _currentManaAmount += 1;
                     _manaUI.UpdateUI(_currentManaAmount);
                 }
