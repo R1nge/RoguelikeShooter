@@ -14,6 +14,7 @@ namespace UI
             _health = GetComponent<Health>();
             _health.InitEvent += UpdateUI;
             _health.OnDamagedEvent += UpdateUI;
+            _health.OnHealedEvent += UpdateUI;
         }
 
         private void UpdateUI(int health) => healthText.text = health.ToString();
@@ -22,6 +23,7 @@ namespace UI
         {
             _health.InitEvent -= UpdateUI;
             _health.OnDamagedEvent -= UpdateUI;
+            _health.OnHealedEvent -= UpdateUI;
         }
     }
 }

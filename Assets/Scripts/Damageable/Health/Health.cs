@@ -10,7 +10,22 @@ namespace Damageable
 
         public event Action<int> InitEvent;
         public event Action<int> OnDamagedEvent;
+        public event Action<int> OnHealedEvent;
         public event Action OnDeathEvent;
+
+        public void Heal(int amount)
+        {
+            if (CurrentHealth + amount > maxHealth)
+            {
+                CurrentHealth = maxHealth;
+            }
+            else
+            {
+                CurrentHealth += amount;
+            }
+
+            OnHealedEvent?.Invoke(CurrentHealth);
+        }
 
         private void Awake() => CurrentHealth = maxHealth;
 
