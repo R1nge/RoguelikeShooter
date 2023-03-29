@@ -41,7 +41,14 @@ namespace Damageable
                 {
                     if (hit.transform.TryGetComponent(out IDamageable damageable))
                     {
-                        damageable.TakeDamage(damage);
+                        if (hit.transform.TryGetComponent(out Health health))
+                        {
+                            health.TakeDamage(damage);
+                        }
+                        else
+                        {
+                            damageable.TakeDamage(damage);
+                        }
                     }
                 }
             }

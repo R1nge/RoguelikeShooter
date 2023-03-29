@@ -8,7 +8,7 @@ namespace Hitboxes
         [SerializeField] protected float damageModifier;
         private Health _health;
 
-        private void Awake() => _health = GetComponent<Health>();
+        private void Awake() => _health = GetComponentInParent<Health>();
 
         public void TakeDamage(int amount) => ApplyModifier(amount);
 
