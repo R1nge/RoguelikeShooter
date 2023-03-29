@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Damageable
 {
-    public abstract class Health : MonoBehaviour, IDamageable
+    public abstract class Health : MonoBehaviour
     {
         [SerializeField] protected int maxHealth;
         protected int CurrentHealth;
