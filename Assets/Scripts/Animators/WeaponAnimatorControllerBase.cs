@@ -6,9 +6,9 @@ namespace Animators
     {
         [SerializeField] protected Animator animator;
 
-        public abstract void AttackSingle();
+        public abstract void AttackPrimarySingle();
 
-        public abstract void AttackHold();
+        public abstract void AttackPrimaryHold();
 
         public abstract void StopAttack();
     }

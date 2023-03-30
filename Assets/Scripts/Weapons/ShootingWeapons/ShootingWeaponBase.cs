@@ -41,8 +41,6 @@ namespace Weapons.ShootingWeapons
 
         public bool IsInfinite() => isInfinite;
 
-        public int GetMaxAmmoAmount() => _maxAmmoAmount;
-
         public void SetMaxAmmoAmount(int value) => _maxAmmoAmount = value;
 
         protected override void Awake()
@@ -58,7 +56,7 @@ namespace Weapons.ShootingWeapons
             AmmoAmountChangedEvent?.Invoke(_currentAmmoAmount, _totalAmmo, isInfinite);
         }
 
-        public override void AttackHold()
+        public override void AttackPrimaryHold()
         {
             if (CurrentAmmoAmount <= 0)
             {
@@ -124,7 +122,7 @@ namespace Weapons.ShootingWeapons
             {
                 _nextFire = Time.time + 1 / (fireRate / 60);
                 Raycast();
-                _shootingWeaponAnimatorControllerBase.AttackHold();
+                _shootingWeaponAnimatorControllerBase.AttackPrimaryHold();
                 CurrentAmmoAmount--;
             }
         }
@@ -158,7 +156,7 @@ namespace Weapons.ShootingWeapons
             {
                 _canShoot = true;
             }
-            
+
             AmmoAmountChangedEvent?.Invoke(_currentAmmoAmount, _totalAmmo, isInfinite);
         }
 

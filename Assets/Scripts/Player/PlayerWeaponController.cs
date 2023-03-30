@@ -15,7 +15,7 @@ namespace Player
         [SerializeField] private InputActionAsset actions;
         [SerializeField] private List<ShootingWeaponBase> weapons;
         private InputAction _weaponScroll;
-        private InputAction _primaryAttackHold;
+        private InputAction _primaryAttackHold, _secondaryAttackHold;
         private int _currentWeaponIndex, _previousWeaponIndex;
         private AmmoUI _ammoUI;
 
@@ -30,7 +30,9 @@ namespace Player
             _ammoUI = GetComponent<AmmoUI>();
             actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
             actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed += PrimaryAttackSingle;
+            actions.FindActionMap("Player").FindAction("SecondaryAttackSingle").performed += SecondaryAttackSingle;
             _primaryAttackHold = actions.FindActionMap("Player").FindAction("PrimaryAttackHold");
+            _secondaryAttackHold = actions.FindActionMap("Player").FindAction("SecondaryAttackHold");
             actions.FindActionMap("Player").FindAction("StopAttack").performed += StopAttack;
             actions.FindActionMap("Player").FindAction("Reload").performed += Reload;
             _weaponScroll = actions.FindActionMap("Player").FindAction("WeaponScroll");
@@ -55,9 +57,14 @@ namespace Player
         {
             WeaponScroll();
 
-            if (_primaryAttackHold.IsPressed())
+            if (_primaryAttackHold.IsPressed() && !_secondaryAttackHold.IsPressed())
             {
-                weapons[_currentWeaponIndex].AttackHold();
+                weapons[_currentWeaponIndex].AttackPrimaryHold();
+            }
+
+            if (!_primaryAttackHold.IsPressed() && _secondaryAttackHold.IsPressed())
+            {
+                weapons[_currentWeaponIndex].AttackSecondaryHold();
             }
         }
 
@@ -98,7 +105,7 @@ namespace Player
         private void PickupWeapon(ShootingWeaponBase weapon)
         {
             weapon.AmmoAmountChangedEvent += UpdateAmmoUI;
-            
+
             if (weapons.Count == 3)
             {
                 SwapWeapon(weapon);
@@ -131,7 +138,13 @@ namespace Player
         private void PrimaryAttackSingle(InputAction.CallbackContext context)
         {
             if (!HasWeapon()) return;
-            weapons[_currentWeaponIndex].AttackSingle();
+            weapons[_currentWeaponIndex].AttackPrimarySingle();
+        }
+
+        private void SecondaryAttackSingle(InputAction.CallbackContext context)
+        {
+            if (!HasWeapon()) return;
+            weapons[_currentWeaponIndex].AttackSecondarySingle();
         }
 
         private void StopAttack(InputAction.CallbackContext context)

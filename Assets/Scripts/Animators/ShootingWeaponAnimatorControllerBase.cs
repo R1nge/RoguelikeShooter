@@ -7,12 +7,12 @@ namespace Animators
         private static readonly int ShootAnim = Animator.StringToHash("Shoot");
         private static readonly int ReloadAnim = Animator.StringToHash("Reload");
 
-        public override void AttackSingle()
+        public override void AttackPrimarySingle()
         {
             animator.SetBool(ShootAnim, true);
         }
 
-        public override void AttackHold()
+        public override void AttackPrimaryHold()
         {
             animator.SetBool(ShootAnim, true);
         }

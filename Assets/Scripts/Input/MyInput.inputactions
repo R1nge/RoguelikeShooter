@@ -42,6 +42,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SecondaryAttackSingle",
+                    "type": "Button",
+                    "id": "d33f7c2a-1852-4e8a-87f6-f0f83b35f95b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryAttackHold",
+                    "type": "Button",
+                    "id": "63ebb009-d064-4c16-9f6e-36f1c936b33c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "550e49af-fed7-4650-8e1b-a4e53e110502",
@@ -420,6 +438,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "SpecialAbility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22a09a3d-48f0-4efd-9fbd-10461769a236",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SecondaryAttackHold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54abb691-54d7-4ce3-a342-da1c661a760f",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SecondaryAttackSingle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -27,14 +27,24 @@ namespace Weapons
             WeaponAnimatorControllerBase = GetComponent<WeaponAnimatorControllerBase>();
         }
 
-        public virtual void AttackSingle()
+        public virtual void AttackPrimarySingle()
         {
-            WeaponAnimatorControllerBase.AttackSingle();
+            WeaponAnimatorControllerBase.AttackPrimarySingle();
         }
 
-        public virtual void AttackHold()
+        public virtual void AttackPrimaryHold()
         {
-            WeaponAnimatorControllerBase.AttackHold();
+            WeaponAnimatorControllerBase.AttackPrimaryHold();
+        }
+
+        public virtual void AttackSecondarySingle()
+        {
+            print("SecondarySingle");
+        }
+
+        public virtual void AttackSecondaryHold()
+        {
+            print("SecondaryHold");
         }
 
         public virtual void StopAttack()
@@ -64,7 +74,7 @@ namespace Weapons
             RemoveFromInventory();
         }
 
-        protected void RemoveFromInventory()
+        private void RemoveFromInventory()
         {
             SetOwner(null);
         }
