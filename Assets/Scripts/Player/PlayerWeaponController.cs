@@ -28,24 +28,35 @@ namespace Player
         private void Awake()
         {
             _ammoUI = GetComponent<AmmoUI>();
-            actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
-            actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed += PrimaryAttackSingle;
-            actions.FindActionMap("Player").FindAction("SecondaryAttackSingle").performed += SecondaryAttackSingle;
-            _primaryAttackHold = actions.FindActionMap("Player").FindAction("PrimaryAttackHold");
-            _secondaryAttackHold = actions.FindActionMap("Player").FindAction("SecondaryAttackHold");
-            actions.FindActionMap("Player").FindAction("StopAttack").performed += StopAttack;
-            actions.FindActionMap("Player").FindAction("Reload").performed += Reload;
-            _weaponScroll = actions.FindActionMap("Player").FindAction("WeaponScroll");
+            InitControls();
             SelectWeapon(0);
             weapons[_currentWeaponIndex].SetOwner(this);
         }
 
-        private void OnDestroy()
+        private void InitControls()
+        {
+            actions.FindActionMap("Player").FindAction("Interact").performed += Interact;
+            actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed += PrimaryAttackSingle;
+            actions.FindActionMap("Player").FindAction("SecondaryAttackSingle").performed += SecondaryAttackSingle;
+            actions.FindActionMap("Player").FindAction("StopAttack").performed += StopAttack;
+            actions.FindActionMap("Player").FindAction("Reload").performed += Reload;
+            _primaryAttackHold = actions.FindActionMap("Player").FindAction("PrimaryAttackHold");
+            _secondaryAttackHold = actions.FindActionMap("Player").FindAction("SecondaryAttackHold");
+            _weaponScroll = actions.FindActionMap("Player").FindAction("WeaponScroll");
+        }
+
+        private void DeleteControls()
         {
             actions.FindActionMap("Player").FindAction("Interact").performed -= Interact;
             actions.FindActionMap("Player").FindAction("PrimaryAttackSingle").performed -= PrimaryAttackSingle;
+            actions.FindActionMap("Player").FindAction("SecondaryAttackSingle").performed -= SecondaryAttackSingle;
             actions.FindActionMap("Player").FindAction("StopAttack").performed -= StopAttack;
             actions.FindActionMap("Player").FindAction("Reload").performed -= Reload;
+        }
+
+        private void OnDestroy()
+        {
+            DeleteControls();
         }
 
         private void Interact(InputAction.CallbackContext context)
